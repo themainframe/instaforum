@@ -81,9 +81,9 @@
         <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="345" visible="true"/>
-        <displaycolumn property-id="tpd4" order="1" width="97" visible="true"/>
-        <displaycolumn property-id="tpd5" order="2" width="128" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="350" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="102" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="133" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
