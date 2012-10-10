@@ -611,7 +611,7 @@ class DB
       $columnDetails = preg_split('/[\t\s]/', $columnDef, -1, PREG_SPLIT_NO_EMPTY);
       
       // Check type
-      if(array_key_exists($columnDetails[0], self::$types))
+      if(!array_key_exists($columnDetails[0], self::$types))
       {
         throw new SchemaException('Column type "' . $columnDetails[0] . 
           '" is undefined in table ' . $tableName);
