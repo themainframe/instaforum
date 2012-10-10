@@ -47,18 +47,10 @@ class Result
    * @var boolean
    */
   private $finalised = false;
- 
-  /**
-   * Finalise the result resource, preventing any further row additions.
-   * 
-   * @return boolean
-   */
-  public function finalise()
-  {
-    $this->finalised = true;
-    
-    return true;
-  }
+
+  //
+  // Schema-related
+  //
   
   /**
    * Add a column to the result resource.
@@ -114,6 +106,22 @@ class Result
   }
   
   /**
+   * Finalise the result resource, preventing any further row additions.
+   * 
+   * @return boolean
+   */
+  public function finalise()
+  {
+    $this->finalised = true;
+    
+    return true;
+  }
+  
+  //
+  // Iteration-related
+  //
+  
+  /**
    * Get the current row from the result resource and advance the current row index.
    *
    * @param boolean $asArray Optionally return an array instead of an object.
@@ -148,5 +156,28 @@ class Result
   public function end()
   {
     return ($this->index == $this->count);
+  }
+  
+  //
+  // Getters/Setters
+  //
+  
+  /**
+   * Set the number of affected rows.
+   * Only valid if the result resource has not been finalised.
+   * 
+   * @param integer $affectedRows The number of affected rows.
+   * @return boolean
+   */
+  public function setAffectedRows($affectedRows)
+  {
+    if($this->finalised)
+    {
+      return false;
+    }
+  
+    $this->affectedRows = $affectedRows;
+    
+    return true;
   }
 }
