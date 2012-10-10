@@ -8,7 +8,7 @@ include 'classes/DB.class.php';
 include 'classes/Predicate.class.php';
 include 'classes/Result.class.php';
 
-$result = DB::select('bikes');
+$result = DB::select('asdsad');
 
 while($row = $result->next())
 {

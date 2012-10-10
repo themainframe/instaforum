@@ -384,7 +384,7 @@ class DB
     $result->setAffectedRows($deletedRows);
     $result->finalise();
 
-    return $result
+    return $result;
   }
  
 
