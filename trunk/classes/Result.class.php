@@ -6,7 +6,8 @@
 class Result 
 {
   /**
-   * The number of rows affected by the associated query.
+   * The number of rows affected by the associated Insert, Delete
+   * or Update query.
    *
    * @var integer
    */

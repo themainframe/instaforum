@@ -44,6 +44,7 @@ class DB
     'str64' => 64,
     
     // Blob (binary/text) types
+    // This is a "special" type in that the engine handles it differently.
     'blob' => 32
   );
   
@@ -151,10 +152,13 @@ class DB
    *
    * @param string $tableName The table to write to.
    * @param array $values An associative array containing the values.
-   * @return boolean
+   * @return Result
    */
   public static function insert($tableName, $values)
   {
+    // Create a result
+    $result = new Result();
+  
     // Open the data file
     $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
     
@@ -201,8 +205,14 @@ class DB
       fwrite($tableDataHandle, $segData);
     }
     
+    // Update the result
+    $result->setAffectedRows(1);
+    $result->finalise();
+    
     // Close up
     fclose($tableDataHandle);
+    
+    return $result;
   }
 
   /** 
@@ -292,14 +302,16 @@ class DB
   /**
    * Deletes specified tuples from a table.
    * Only deletes rows satisfying $predicate, if present.
-   * Returns the number of deleted rows. 
    * 
    * @param string $tableName The table to act on.
    * @param Predicate $predicate Optionally a predicate.
-   * @return integer
+   * @return Result
    */
   public static function delete($tableName, $predicate = null)
   {  
+    // Create a result
+    $result = new Result();
+  
     // Get structure
     $structure = DB::getTableCols($tableName);
   
@@ -324,8 +336,8 @@ class DB
     // Collect new data
     $rows = array(); 
 
-    // Count affected rows
-    $affectedRows = 0;
+    // Count deleted rows
+    $deletedRows = 0;
  
     // Start reading
     while(!feof($tableDataHandle))
@@ -354,7 +366,7 @@ class DB
       }
       else
       {
-        $alteredRows ++;
+        $deletedRows ++;
       }
       
     }
@@ -368,7 +380,11 @@ class DB
       DB::insert($tableName, $row);
     } 
 
-    return $alteredRows;
+    // Update the result
+    $result->setAffectedRows($deletedRows);
+    $result->finalise();
+
+    return $result
   }
  
 
@@ -550,6 +566,18 @@ class DB
     return $result;
   }
   
+  /**
+   * Get the columns of the specified table as an associative array.
+   * The array will be formatted:
+   * 
+   *   array(
+   *     'columnName' => array('type' => type, 'primary' => primary),
+   *     ...
+   *   )
+   *
+   * @param string $tableName The table to retreive columns for.
+   * @return array
+   */
   private static function getTableCols($tableName)
   {
     // Collect table column info
@@ -583,7 +611,7 @@ class DB
       $columnDetails = preg_split('/[\t\s]/', $columnDef, -1, PREG_SPLIT_NO_EMPTY);
       
       // Check type
-      if(!DB::typeExists($columnDetails[0]))
+      if(array_key_exists($columnDetails[0], self::$types))
       {
         throw new SchemaException('Column type "' . $columnDetails[0] . 
           '" is undefined in table ' . $tableName);
