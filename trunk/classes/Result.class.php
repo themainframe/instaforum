@@ -184,7 +184,7 @@ class Result
       $this->profiling[$name] = 0.0;
     }
     
-    $this->profiling[$name] += floatval($time / 1000);
+    $this->profiling[$name] += round($time * 1000, 4);
     
     return true;
   } 

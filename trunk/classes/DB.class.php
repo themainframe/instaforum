@@ -524,6 +524,9 @@ class DB
   public static function select($tableName, $predicate = null, $limitCount = -1,
     $limitStart = -1)
   {  
+    // Start timer
+    $totalStartTime = microtime(true);
+  
     // Create a result
     $result = new Result();
     
@@ -592,9 +595,11 @@ class DB
           
           $blobResolveEndTime = microtime(true);
           $result->addProfileTime('ResolvingBlobs', 
-          $blobResolveEndTime - $blobResolveStartTime);
+            $blobResolveEndTime - $blobResolveStartTime);
         }
       }
+      
+      $applyingPredicatesStartTime = microtime(true);
       
       // Check the row against the predicate if present
       if(!$predicate || $predicate->val($row))
@@ -607,10 +612,18 @@ class DB
         }    
       }
       
+      $applyingPredicatesEndTime = microtime(true);
+      $result->addProfileTime('ApplyingPredicates', 
+        $applyingPredicatesEndTime - $applyingPredicatesStartTime);
+      
       $limitStart --;
     }
     
     $result->finalise();
+    
+    $totalEndTime = microtime(true);
+    $result->addProfileTime('TotalTime', 
+      $totalEndTime - $totalStartTime);
     
     return $result;
   }
