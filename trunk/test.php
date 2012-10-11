@@ -14,3 +14,7 @@ while($row = $result->next())
 {
   print $row->name . "\n";
 } 
+
+print "\n\n\n";
+
+print_r($result->profiling);

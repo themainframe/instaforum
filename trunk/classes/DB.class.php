@@ -402,6 +402,9 @@ class DB
     // Create a result
     $result = new Result();
   
+    // Start timer
+    $structureStartTime = microtime(true);
+  
     // Get structure
     $structure = DB::getTableCols($tableName);
   
@@ -411,6 +414,11 @@ class DB
     {
       $widths[$columnName] = self::$types[$column['type']];
     }
+    
+    // End timer
+    $structureEndTime = microtime(true);
+    $result->addProfileTime('GettingStructure', 
+      $structureEndTime - $structureStartTime);
 
     // Open the data file
     $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
@@ -482,11 +490,19 @@ class DB
     // Truncate
     DB::truncate($tableName);
 
+    // Start timer
+    $reinsertRowsStartTime = microtime(true);
+
     // Rewrite
     foreach($rows as $row)
     {
       DB::insert($tableName, $row);
     } 
+    
+    // End timer
+    $reinsertRowsEndTime = microtime(true);
+    $result->addProfileTime('ReinsertingRows', 
+      $reinsertRowsEndTime - $reinsertRowsStartTime);
     
     $result->setAffectedRows($affectedRows);
     $result->finalise();
@@ -497,15 +513,22 @@ class DB
 
   /**
    * Select one or more rows from the database, optionally applying a predicate.
+   *
+   * Using the $limitCount and $limitStart arguments, it is also possible to
+   * limit the number of rows returned.
    * 
    * @param string $tableName The name of the table to select from.
    * @param Predicate $predicate Optionally a predicate to apply to the selection.
    * @return Result
    */
-  public static function select($tableName, $predicate = null)
+  public static function select($tableName, $predicate = null, $limitCount = -1,
+    $limitStart = -1)
   {  
     // Create a result
     $result = new Result();
+    
+    // Start timer
+    $structureStartTime = microtime(true);
     
     // Get structure
     $structure = DB::getTableCols($tableName);
@@ -518,6 +541,10 @@ class DB
       $result->addColumn($columnName);
     }
     
+    $structureEndTime = microtime(true);
+    $result->addProfileTime('GettingStructure', 
+      $structureEndTime - $structureStartTime);
+    
     // Open the data file
     $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
     
@@ -528,10 +555,18 @@ class DB
     }
     
     $tableDataHandle = fopen($tableDataFile, 'r');
+    $initialLimit = $limitCount;
     
     // Start reading
     while(!feof($tableDataHandle))
-    {
+    {      
+      // End of run?
+      if($initialLimit > 0 && $limitCount == 0)
+      {
+        // No more rows
+        break;
+      }
+    
       // Read a row
       $row = array();
       
@@ -550,15 +585,29 @@ class DB
         // Blob resolution required?
         if($column['type'] == 'blob')
         {
+          $blobResolveStartTime = microtime(true);
+          
+          // Resolve the blob
           $row[$columnName] = DB::resolveBlob($tableName, $row[$columnName]);
+          
+          $blobResolveEndTime = microtime(true);
+          $result->addProfileTime('ResolvingBlobs', 
+          $blobResolveEndTime - $blobResolveStartTime);
         }
       }
       
       // Check the row against the predicate if present
       if(!$predicate || $predicate->val($row))
       {
-        $result->addRow($row);
+        // Skip this row, or add it?
+        if($limitStart <= 0)
+        {
+          $result->addRow($row);
+          $limitCount --;
+        }    
       }
+      
+      $limitStart --;
     }
     
     $result->finalise();

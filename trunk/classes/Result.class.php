@@ -48,6 +48,13 @@ class Result
    * @var boolean
    */
   private $finalised = false;
+  
+  /** 
+   * Profiling information collected during the query.
+   *
+   * @var array
+   */
+  public $profiling = array();
 
   //
   // Schema-related
@@ -158,6 +165,29 @@ class Result
   {
     return ($this->index == $this->count);
   }
+  
+  //
+  // Profiling-related
+  //
+  
+  /**
+   * Add a profiling time slot.
+   *
+   * @param string $name The name of the time slot.
+   * @param float $time The time consumed in microseconds.
+   * @return boolean
+   */
+  public function addProfileTime($name, $time)
+  {
+    if(!array_key_exists($name, $this->profiling))
+    {
+      $this->profiling[$name] = 0.0;
+    }
+    
+    $this->profiling[$name] += floatval($time / 1000);
+    
+    return true;
+  } 
   
   //
   // Getters/Setters
