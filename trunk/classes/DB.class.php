@@ -241,7 +241,26 @@ class DB
    */ 
   public static function deleteTable($tableName)
   {
+    // Check if the DB is in a writable state
+    if(!is_writable(self::$dataPath))
+    {
+      throw new PermissionDeniedException(self::$dataPath);
+    }
     
+    $tablePath = self::$dataPath . '/' . $tableName . '.table';
+    
+    // Remove all blob files by truncating the table first
+    DB::truncate($tableName);
+    
+    // Remove the blobs directory and defition/data files
+    rmdir($tablePath . '/blobs');
+    unlink($tablePath . '/definition');
+    unlink($tablePath . '/data');
+    
+    // Remove the table directory
+    rmdir($tablePath);
+    
+    return true;
   }
   
   /**

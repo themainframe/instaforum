@@ -13,3 +13,7 @@ DB::createTable('people', array(
   'name' => array('type' => 'str32'),
   'fav_colour' => array('type' => 'str32')
 ));
+
+sleep(5);
+
+DB::deleteTable('people');
