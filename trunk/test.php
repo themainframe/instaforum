@@ -8,13 +8,8 @@ include 'classes/DB.class.php';
 include 'classes/Predicate.class.php';
 include 'classes/Result.class.php';
 
-$result = DB::select('bikes');
-
-while($row = $result->next())
-{
-  print $row->name . "\n";
-} 
-
-print "\n\n\n";
-
-print_r($result->profiling);
+DB::createTable('people', array(
+  'id' => array('type' => 'int'),
+  'name' => array('type' => 'str32'),
+  'fav_colour' => array('type' => 'str32')
+));

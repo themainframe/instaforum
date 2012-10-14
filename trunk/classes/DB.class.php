@@ -117,7 +117,7 @@ class DB
     if(!is_writeable($tableDataFile))
     {
       // Can't write to the data file
-      throw new FileNotFoundException($tableDataFile);
+      throw new PermissionDeniedException($tableDataFile);
     }
    
     // Open for writing
@@ -146,6 +146,103 @@ class DB
 
     return true;
   } 
+  
+  /** 
+   * Create a table.
+   * 
+   * $columns should be an associative array matching the prototype:
+   *
+   *   array(
+   *     'columnName' => array(
+   *        'primary' => boolean,
+   *        'type' => string
+   *     )
+   *     ...
+   *   )
+   *
+   * @param string $tableName The name of the new table.
+   * @param array $columns An associative array describing the columns.
+   * @return boolean
+   */ 
+  public static function createTable($tableName, $columns)
+  {
+    // Check if the DB is in a writable state
+    if(!is_writable(self::$dataPath))
+    {
+      throw new PermissionDeniedException(self::$dataPath);
+    }
+    
+    $tablePath = self::$dataPath . '/' . $tableName . '.table';
+    
+    // Check if the table name is taken
+    if(file_exists($tablePath))
+    {
+      throw new SchemaException('Table with name ' . $tableName . 
+        ' already exists in the DB');
+    }
+    
+    // Create the directory and the blob directory
+    mkdir($tablePath);
+    mkdir($tablePath . '/blobs'); 
+    
+    // Write base files
+    touch($tablePath . '/data');
+    touch($tablePath . '/definition');
+    
+    // Open definition file for writing
+    $defintionHandle = fopen($tablePath . '/definition', 'w');
+    
+    // Build the definition text
+    $hasPrimary = false;
+    $columnNamesWritten = array();
+    
+    foreach($columns as $columnName => $column)
+    {
+      if($column['primary'])
+      {
+        if($hasPrimary)
+        {
+          throw new SchemaException('Table ' . $tableName . 
+            ' cannot have multiple primary key columns');
+        }
+        
+        $hasPrimary = true;
+      }
+      
+      // Check type is valid
+      if(!array_key_exists($column['type'], self::$types))
+      {
+        throw new SchemaException('Type ' . $column['type'] . 
+          ' is not defined in the DB');
+      }
+      
+      // Write the column to the definition file
+      fwrite($defintionHandle, $column['type'] . ' ' . $column['name'] . 
+        ($column['primary'] ? ' primary' : ''));
+        
+      // Not last column? Linebreak required
+      if(count($columnNamesWritten) != count($columns) - 1)
+      {
+        fwrite($defintionHandle, "\n");
+      }
+      
+      // Remember that this column has been written
+      $columnNamesWritten[] = $columnName;
+    }
+    
+    return true;
+  }
+  
+  /** 
+   * Delete a table from the database instantly.
+   *
+   * @param string $tableName The name of the table to remove.
+   * @return boolean
+   */ 
+  public static function deleteTable($tableName)
+  {
+    
+  }
   
   /**
    * Write a row into a table.
@@ -293,12 +390,6 @@ class DB
     return file_get_contents($blobPath);
   }
 
-  private static function typeExists($type)
-  {
-    return array_key_exists($type, self::$types);
-  }
-
-
   /**
    * Deletes specified tuples from a table.
    * Only deletes rows satisfying $predicate, if present.
@@ -360,12 +451,14 @@ class DB
       }
       
       // Check the row against the predicate if present
-      if(!$predicate || !$predicate->val($row))
+      if($predicate && !$predicate->val($row))
       {
+        // Keep the row
         $rows[] = $row;
       }
       else
       {
+        // Drop the row
         $deletedRows ++;
       }
       
