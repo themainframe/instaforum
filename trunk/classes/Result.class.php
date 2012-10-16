@@ -207,7 +207,7 @@ class Result
       return false;
     }
   
-    $this->affectedRows = $affectedRows;
+    $this->affected = $affectedRows;
     
     return true;
   }

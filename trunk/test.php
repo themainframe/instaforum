@@ -8,17 +8,21 @@ include 'classes/DB.class.php';
 include 'classes/Predicate.class.php';
 include 'classes/Result.class.php';
 
-
-
-DB::createTable('people', array(
-  'id' => array('type' => 'int'),
-  'name' => array('type' => 'str32'),
-  'fav_colour' => array('type' => 'str32')
-));
-
-?>
+// Insert
 DB::insert('people', array(
-  'id' => 1,
-  'name' => 'Tom',
-  'fav_colour' => 'Blue'
+  'name' => 'John',
+  'fav_colour' => 'Red'
 ));
+
+// Select
+$res = DB::select('people');
+print $res->count . ' rows in the table.' . "\n";
+
+
+// Delete everything!!
+$res = DB::delete('people');
+print $res->affected . ' rows were affected by the query.';
+
+
+$res = DB::select('people');
+print "\n" . $res->count . ' rows are in the table now.';
