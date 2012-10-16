@@ -8,12 +8,17 @@ include 'classes/DB.class.php';
 include 'classes/Predicate.class.php';
 include 'classes/Result.class.php';
 
+
+
 DB::createTable('people', array(
   'id' => array('type' => 'int'),
   'name' => array('type' => 'str32'),
   'fav_colour' => array('type' => 'str32')
 ));
 
-sleep(5);
-
-DB::deleteTable('people');
+?>
+DB::insert('people', array(
+  'id' => 1,
+  'name' => 'Tom',
+  'fav_colour' => 'Blue'
+));

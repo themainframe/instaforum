@@ -217,7 +217,7 @@ class DB
       }
       
       // Write the column to the definition file
-      fwrite($defintionHandle, $column['type'] . ' ' . $column['name'] . 
+      fwrite($defintionHandle, $column['type'] . ' ' . $columnName . 
         ($column['primary'] ? ' primary' : ''));
         
       // Not last column? Linebreak required
