@@ -818,7 +818,7 @@ class DB implements IDataSource
    * @param string $tableName The table to retreive columns for.
    * @return array
    */
-  private static function getTableCols($tableName)
+  public static function getTableCols($tableName)
   {
     // Collect table column info
     $columns = array();
