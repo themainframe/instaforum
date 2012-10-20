@@ -20,7 +20,7 @@ final class SchemaException extends Exception
  *
  * @package lightgroup
  */
-class FileDB implements IDataSource
+class DB implements IDataSource
 {
   /**
    * The location of the data files.

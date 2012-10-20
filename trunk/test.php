@@ -6,29 +6,29 @@ header('Content-type: text/plain');
 include 'interfaces/IDataSource.interface.php';
 
 // Include database
-include 'classes/datasources/FileDB/Files.class.php';
-include 'classes/datasources/FileDB/FileDB.class.php';
-include 'classes/datasources/FileDB/Predicate.class.php';
-include 'classes/datasources/FileDB/Result.class.php';
+include 'classes/datasources/DB/Files.class.php';
+include 'classes/datasources/DB/DB.class.php';
+include 'classes/datasources/DB/Predicate.class.php';
+include 'classes/datasources/DB/Result.class.php';
 
 // Open
-FileDB::open('./db/');
+DB::open('./db/');
 
 // Insert
-FileDB::insert('people', array(
+DB::insert('people', array(
   'name' => 'John',
   'fav_colour' => 'Red'
 ));
 
 // Select
-$res = FileDB::select('people');
+$res = DB::select('people');
 print $res->count . ' rows in the table.' . "\n";
 
 
 // Delete everything!!
-$res = FileDB::delete('people');
+$res = DB::delete('people');
 print $res->affected . ' rows were affected by the query.';
 
 
-$res = FileDB::select('people');
+$res = DB::select('people');
 print "\n" . $res->count . ' rows are in the table now.';
