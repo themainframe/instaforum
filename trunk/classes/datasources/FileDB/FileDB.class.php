@@ -69,7 +69,33 @@ class DB implements IDataSource
     
     return true;
   }
-  
+
+  /**
+   * List the tables on the database.
+   * Returns an array of strings, the names of the tables.
+   *
+   * @return array
+   */
+  public static function listTables()
+  {
+    // Read the DB directory
+    $tables = array();
+    
+    if($dataHandle = opendir(self::$dataPath))
+    {
+      while(($file = readdir($dataHandle)) !== false)
+      {        
+        if($file != '.' && $file != '..' && is_dir(self::$dataPath . '/' . $file) && 
+          strpos($file, '.table') !== false)
+        {
+          $tables[] = str_replace('.table', '', $file);
+        }
+      }
+    } 
+    
+    return $tables;
+  }
+   
   /**
    * Convert an array of data into a binstring
    * 
