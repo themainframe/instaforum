@@ -1,6 +1,6 @@
 <?php
 /**
- * Defines the database classes
+ * Defines the FileDB classes
  *
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
@@ -15,19 +15,19 @@ final class SchemaException extends Exception
 }
  
 /**
- * Database Class
+ * FileDB Class
  * Provides interaction with the stored data.
  *
  * @package lightgroup
  */
-class DB 
+class FileDB implements IDataSource
 {
   /**
    * The location of the data files.
    * 
    * @var string
    */
-  public static $dataPath = './db/';
+  public static $dataPath = '';
   
   /**
    * Data types
@@ -49,13 +49,35 @@ class DB
   );
   
   /**
+   * Open the database at the specified directory.
+   *
+   * @throws FileNotFoundException
+   * @param string $directory The data store directory to use.
+   * @return boolean
+   */
+  public static function open($directory)
+  {
+    if(File::isWritable($directory))
+    {
+      // Directory is OK
+      self::$dataPath = $directory;
+    }
+    else
+    {
+      throw new FileNotFoundException($directory);
+    }
+    
+    return true;
+  }
+  
+  /**
    * Convert an array of data into a binstring
    * 
    * @param array $data The data.
    * @param integer $pad Optionally a padding value to pad to with NUL bytes.
    * @return string
    */
-  private static function getChrs($data, $pad = -1)
+  private static function getChrs(array $data, $pad = -1)
   {
     $result = '';
     $bCount = 0;
@@ -85,6 +107,12 @@ class DB
     return $result;
   }
   
+  /**
+   * Unpack a segment of a data file.
+   *
+   * @param string $segment The segment to unpack.
+   * @return string
+   */
   private static function unpackSegment($segment)
   {
     $realData = array();
@@ -105,6 +133,7 @@ class DB
    * Truncate a table.
    * ! Removes all data from the table instantly ! 
    * 
+   * @throws PermissionDeniedException
    * @param string $tableName The table to truncate. 
    * @return boolean.
    */
@@ -160,11 +189,12 @@ class DB
    *     ...
    *   )
    *
+   * @throws PermissionDeniedException, SchemaException
    * @param string $tableName The name of the new table.
    * @param array $columns An associative array describing the columns.
    * @return boolean
    */ 
-  public static function createTable($tableName, $columns)
+  public static function createTable($tableName, array $columns)
   {
     // Check if the DB is in a writable state
     if(!is_writable(self::$dataPath))
@@ -236,6 +266,7 @@ class DB
   /** 
    * Delete a table from the database instantly.
    *
+   * @throws PermissionDeniedException
    * @param string $tableName The name of the table to remove.
    * @return boolean
    */ 
@@ -250,7 +281,7 @@ class DB
     $tablePath = self::$dataPath . '/' . $tableName . '.table';
     
     // Remove all blob files by truncating the table first
-    DB::truncate($tableName);
+    self::truncate($tableName);
     
     // Remove the blobs directory and defition/data files
     rmdir($tablePath . '/blobs');
@@ -266,11 +297,12 @@ class DB
   /**
    * Write a row into a table.
    *
+   * @throws FileNotFoundException, IOException
    * @param string $tableName The table to write to.
    * @param array $values An associative array containing the values.
    * @return Result
    */
-  public static function insert($tableName, $values)
+  public static function insert($tableName, array $values)
   {
     // Create a result
     $result = new Result();
@@ -293,7 +325,7 @@ class DB
     }
   
     // Get the columns for the specified table.
-    $columns = DB::getTableCols($tableName);
+    $columns = self::getTableCols($tableName);
     
     // Get the primary key value
     $pKeyValue = current($values);
@@ -307,14 +339,15 @@ class DB
       // Blob?
       if($column['type'] == 'blob')
       { 
-        $segData = DB::getChrs(
-          DB::linkBlob($tableName, $values[$columnName]),
+        $segData = self::getChrs(
+          self::linkBlob($tableName, $values[$columnName]),
           self::$types['blob']);
       }
       else
       {
-        $segData = DB::getChrs(substr($values[$columnName], 0,
-          self::$types[$column['type']]),
+        $segData = self::getChrs(
+          str_split(substr($values[$columnName], 0,
+          self::$types[$column['type']])),
           self::$types[$column['type']]);
       }
 
@@ -334,6 +367,7 @@ class DB
   /** 
    * Link a blob to a table.
    * 
+   * @throws FileNotFoundException
    * @param string $tableName The table to link to.
    * @param string $blobData The data to store.
    * @return string
@@ -365,6 +399,7 @@ class DB
   /** 
    * Unlink a blob from a table.
    * 
+   * @throws FileNotFoundException
    * @param string $tableName The table to link to.
    * @param string $blobID The ID of the blob to remove.
    * @return boolean 
@@ -390,6 +425,7 @@ class DB
   /**
    * Resolve a blob for a named table.
    *
+   * @throws FileNotFoundException
    * @param string $tableName The table to which the blob belongs.
    * @param string $blobID The ID of the blob to resolve.
    * @return string
@@ -413,6 +449,7 @@ class DB
    * Deletes specified tuples from a table.
    * Only deletes rows satisfying $predicate, if present.
    * 
+   * @throws FileNotFoundException
    * @param string $tableName The table to act on.
    * @param Predicate $predicate Optionally a predicate.
    * @return Result
@@ -423,7 +460,7 @@ class DB
     $result = new Result();
   
     // Get structure
-    $structure = DB::getTableCols($tableName);
+    $structure = self::getTableCols($tableName);
   
     // Calculate widths
     $widths = array();
@@ -466,7 +503,7 @@ class DB
           break 2;
         }
         
-        $row[$columnName] = DB::unpackSegment($segment);
+        $row[$columnName] = self::unpackSegment($segment);
       }
       
       // Check the row against the predicate if present
@@ -484,12 +521,12 @@ class DB
     }
     
     // Truncate
-    DB::truncate($tableName);
+    self::truncate($tableName);
 
     // Rewrite
     foreach($rows as $row)
     {
-      DB::insert($tableName, $row);
+      self::insert($tableName, $row);
     } 
 
     // Update the result
@@ -504,12 +541,13 @@ class DB
    * Update specified fields of a table using an associative array mask.
    * Only updates rows satisfying $predicate, if present.
    * 
+   * @throws FileNotFoundException
    * @param string $tableName The table to act on.
    * @param array $changes An associative array mask of changes to make.
    * @param Predicate $predicate Optionally a predicate.
    * @return Result
    */
-  public static function update($tableName, $changes, $predicate = null)
+  public static function update($tableName, array $changes, $predicate = null)
   {  
     // Create a result
     $result = new Result();
@@ -518,7 +556,7 @@ class DB
     $structureStartTime = microtime(true);
   
     // Get structure
-    $structure = DB::getTableCols($tableName);
+    $structure = self::getTableCols($tableName);
   
     // Calculate widths
     $widths = array();
@@ -566,12 +604,12 @@ class DB
           break 2;
         }
         
-        $row[$columnName] = DB::unpackSegment($segment);
+        $row[$columnName] = self::unpackSegment($segment);
         
         // Blob resolution required?
         if($column['type'] == 'blob')
         {
-          $row[$columnName] = DB::resolveBlob($tableName, $row[$columnName]);
+          $row[$columnName] = self::resolveBlob($tableName, $row[$columnName]);
         }
       }
       
@@ -584,7 +622,7 @@ class DB
           // If the type is a blob, unlink it, it is now stale
       	  if($cInfo['type'] == 'blob')
       	  {
-      	    DB::unlinkBlob($tableName, $row[$cName]);
+      	    self::unlinkBlob($tableName, $row[$cName]);
       	  }
          
           if(array_key_exists($cName, $changes))
@@ -600,7 +638,7 @@ class DB
     }
     
     // Truncate
-    DB::truncate($tableName);
+    self::truncate($tableName);
 
     // Start timer
     $reinsertRowsStartTime = microtime(true);
@@ -608,7 +646,7 @@ class DB
     // Rewrite
     foreach($rows as $row)
     {
-      DB::insert($tableName, $row);
+      self::insert($tableName, $row);
     } 
     
     // End timer
@@ -629,6 +667,7 @@ class DB
    * Using the $limitCount and $limitStart arguments, it is also possible to
    * limit the number of rows returned.
    * 
+   * @throws FileNotFoundException
    * @param string $tableName The name of the table to select from.
    * @param Predicate $predicate Optionally a predicate to apply to the selection.
    * @return Result
@@ -646,7 +685,7 @@ class DB
     $structureStartTime = microtime(true);
     
     // Get structure
-    $structure = DB::getTableCols($tableName);
+    $structure = self::getTableCols($tableName);
   
     // Calculate widths
     $widths = array();
@@ -695,7 +734,7 @@ class DB
           break 2;
         }
         
-        $row[$columnName] = DB::unpackSegment($segment);
+        $row[$columnName] = self::unpackSegment($segment);
         
         // Blob resolution required?
         if($column['type'] == 'blob')
@@ -703,7 +742,7 @@ class DB
           $blobResolveStartTime = microtime(true);
           
           // Resolve the blob
-          $row[$columnName] = DB::resolveBlob($tableName, $row[$columnName]);
+          $row[$columnName] = self::resolveBlob($tableName, $row[$columnName]);
           
           $blobResolveEndTime = microtime(true);
           $result->addProfileTime('ResolvingBlobs', 
@@ -749,6 +788,7 @@ class DB
    *     ...
    *   )
    *
+   * @throws FileNotFoundException, IOException, SchemaException
    * @param string $tableName The table to retreive columns for.
    * @return array
    */

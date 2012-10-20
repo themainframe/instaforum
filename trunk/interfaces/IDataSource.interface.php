@@ -15,14 +15,14 @@ interface IDataSource
   //
   // Structure/schema
   // 
-  public static function createTable(string $tableName, array $columns);
-  public static function deleteTable(string $tableName);
+  public static function createTable($tableName, array $columns);
+  public static function deleteTable($tableName);
 
   //
   // Data
   //
-  public static function insert(string $tableName, array $columns);
-  public static function update(string $tableName, array $columns, $predicate);
-  public static function delete(string $tableName, $predicate);
-  public static function select(string $tableName, $predicate, $limitCount, $limitStart);
+  public static function insert($tableName, array $columns);
+  public static function update($tableName, array $columns, $predicate);
+  public static function delete($tableName, $predicate);
+  public static function select($tableName, $predicate, $limitCount, $limitStart);
 }
