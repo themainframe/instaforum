@@ -34,7 +34,7 @@ class DB implements IDataSource
    *
    * @var array
    */
-  private static $types = array(
+  public static $types = array(
     
     // Integer types
     'int' => 8,
