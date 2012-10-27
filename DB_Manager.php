@@ -1,7 +1,7 @@
 <?php
 /**
- * FileDB Manager.
- * Provides a basic interface to manage the contents of a FileDB.
+ * DB Manager.
+ * Provides a basic interface to manage the contents of the DB.
  */
 
 ?>
@@ -38,14 +38,11 @@
 
 <?php
 
-// Interfaces
-include 'interfaces/IDataSource.interface.php';
-
 // Include database
-include 'classes/datasources/FileDB/Files.class.php';
-include 'classes/datasources/FileDB/FileDB.class.php';
-include 'classes/datasources/FileDB/Predicate.class.php';
-include 'classes/datasources/FileDB/Result.class.php';
+include 'classes/datasource/Files.class.php';
+include 'classes/datasource/DB.class.php';
+include 'classes/datasource/Predicate.class.php';
+include 'classes/datasource/Result.class.php';
 
 // Open
 DB::open('./db/');
