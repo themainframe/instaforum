@@ -7,10 +7,13 @@
 ?>
 <html>
 <head>
+  <title>DB Manager</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <style type="text/css">
     
     * {
-      font-family: monospace;
+      font-family: "Lucida Grande";
+      font-size: 9pt;
     }
     
     .header {
@@ -29,7 +32,16 @@
     }
     
     body {
+      padding:  0;
+      margin: 0
+    }
+    
+    div.container {
       padding: 15px;
+    }
+    
+    h1 {
+      font-size: 12pt;
     }
     
   </style>
@@ -81,130 +93,137 @@ $tables = DB::listTables();
 
 ?>
 
-<div style="float: left; width: 15%">
-  
-  <div style=" width: 100%" class="box">
-    <div class="header">Tables</div>
-    <div class="content">
-  <?php
-  foreach($tables as $table)
-  {
-    print '<a href="?view=' . $table . '">' . $table . '</a><br />' . "\n";
-  }
-  ?>
-    </div>
-  </div>
+<div style="width:100%; background: #dfdfdf; padding: 5px 5px 5px 20px">
+  <h1>Database Manager</h1>
 </div>
 
+<div class="container">
 
-<?php
-if($_GET['view'])
-{
-?>
-  
-<form action="?act=insert&view=<?php print $_GET['view']; ?>" method="post">
-  
-  <div style="float: right; width: 83%;" class="box">
+  <div style="float: left; width: 15%">
     
-    <div class="header"><?php print $_GET['view']; ?> - Insert Row</div>
-    
-    <br />
-    
-    <table style="width: 100%">
-      
-      <tbody>
-      
-      <tr>
-      
+    <div style=" width: 100%" class="box">
+      <div class="header">Tables</div>
+      <div class="content">
     <?php
+    foreach($tables as $table)
+    {
+      print '<a href="?view=' . $table . '">' . $table . '</a><br />' . "\n";
+    }
+    ?>
+      </div>
+    </div>
+  </div>
+  
+  
+  <?php
+  if($_GET['view'])
+  {
+  ?>
     
+  <form action="?act=insert&view=<?php print $_GET['view']; ?>" method="post">
+    
+    <div style="float: right; width: 83%;" class="box">
+      
+      <div class="header"><?php print $_GET['view']; ?> - Insert Row</div>
+      
+      <br />
+      
+      <table style="width: 100%">
         
-      // Get table
-      $table = DB::getTableCols($_GET['view']);
-    
-      // Show the insertion row
-      foreach($table as $columnName => $column)
-      {
-        print '<td>' . $columnName . '(' . DB::$types[$column['type']] . '): <input type="text" name="' . $columnName . '" style="width: ' . 
-          DB::$types[$column['type']] * 4 . 'px" /></td>' . "\n";
-      }
-    
-    ?>
-    
-      <td>
-        <input type="submit" value="Insert!" />
-      </td>
+        <tbody>
+        
+        <tr>
+        
+      <?php
       
-      </tr>
+          
+        // Get table
+        $table = DB::getTableCols($_GET['view']);
       
-      </tbody>
+        // Show the insertion row
+        foreach($table as $columnName => $column)
+        {
+          print '<td>' . $columnName . '(' . DB::$types[$column['type']] . '): <input type="text" name="' . $columnName . '" style="width: ' . 
+            DB::$types[$column['type']] * 4 . 'px" /></td>' . "\n";
+        }
       
-    </table>
-    
-  </div>
-  
-</form>
-  
-  <div style="margin-top: 10px; float: right; width: 83%;" class="box">
-    
-    <div class="header"><?php print $_GET['view']; ?> - Table Content</div>
-  
-    <table style="width: 100%; border-spacing: 0px;">
-      <thead>
-        <tr class="header">
-    <?php
-
+      ?>
       
-      // Produce columns first
-      foreach($table as $columnName => $column)
-      {
-        print '<td>' . $columnName . '</td>' . "\n";
-      }
-    
-    ?>
-    
-      <td style="width: 70px">
-        <a href="?act=truncate&view=<?php print $_GET['view']; ?>">Truncate</a>
-      </td>
-    
+        <td>
+          <input type="submit" value="Insert!" />
+        </td>
+        
         </tr>
-      </thead>
-      <tbody>
+        
+        </tbody>
+        
+      </table>
       
-    <?php
-      
-      // Produce rows
-      $rows = DB::select($_GET['view']);
-      
-      while($row = $rows->next())
-      {
-        ?>
-          <tr style="height: 30px;">
-            
-            <?php
-            
-              foreach($row as $columnName => $value)
-              {
-                print '<td>' . $value. '</td>' . "\n";
-              }
-            
-            ?>
-            
-            
-          </tr>
-        <?php
-      }
+    </div>
     
-    ?>
+  </form>
+    
+    <div style="margin-top: 10px; float: right; width: 83%;" class="box">
       
-      </tbody>
-    </table>
-  </div>
+      <div class="header"><?php print $_GET['view']; ?> - Table Content</div>
+    
+      <table style="width: 100%; border-spacing: 0px;">
+        <thead>
+          <tr class="header">
+      <?php
+  
+        
+        // Produce columns first
+        foreach($table as $columnName => $column)
+        {
+          print '<td>' . $columnName . '</td>' . "\n";
+        }
+      
+      ?>
+      
+        <td style="width: 70px">
+          <a href="?act=truncate&view=<?php print $_GET['view']; ?>">Truncate</a>
+        </td>
+      
+          </tr>
+        </thead>
+        <tbody>
+        
+      <?php
+        
+        // Produce rows
+        $rows = DB::select($_GET['view']);
+        
+        while($row = $rows->next())
+        {
+          ?>
+            <tr style="height: 30px;">
+              
+              <?php
+              
+                foreach($row as $columnName => $value)
+                {
+                  print '<td>' . $value. '</td>' . "\n";
+                }
+              
+              ?>
+              
+              
+            </tr>
+          <?php
+        }
+      
+      ?>
+        
+        </tbody>
+      </table>
+    </div>
+  
+  <?php
+  }
+  ?>
 
-<?php
-}
-?>
-
+</div>
 
 </body>
 </html>
