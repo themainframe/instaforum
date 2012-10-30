@@ -25,6 +25,12 @@ switch($_GET['act'])
   
     break;
     
+  case 'rm_row':
+  
+    DB::delete($_GET['view'], Predicate::_equal(new Value($_GET['column']), $_GET['value']));
+  
+    break;
+    
   case 'insert':
   
     // Get the cols first
@@ -367,7 +373,18 @@ switch($_GET['act'])
               
                 foreach($row as $columnName => $value)
                 {
-                  print '<td style="padding-left: 10px;">' . $value. '</td>' . "\n";
+                  print '<td style="padding-left: 10px;">';
+                  
+                  if($table[$columnName]['auto'])
+                  {
+                    // Column is auto, can delete by it.
+                    print '[ <a href="?act=rm_row&view=' . $_GET['view'] . '&column=' . 
+                      $columnName . '&port=tables&value=' . $value . 
+                      '"style="font-weight:bold; color: #f00">X</a> ]&nbsp; ';
+                  }
+                  
+                  print $value;
+                  print '</td>' . "\n";
                 }
               
               ?>
