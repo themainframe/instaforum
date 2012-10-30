@@ -305,7 +305,7 @@ switch($_GET['act'])
             </td>
             <td>
               <input type="text" name="<?php print $columnName; ?>"
-               style="width:<?php print DB::$types[$column['type']] * 4; ?>px" />
+               style="width:<?php print (DB::$types[$column['type']] * 4) + 30; ?>px" />
               
               <?php
                 if($column['auto'])
