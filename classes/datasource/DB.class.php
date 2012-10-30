@@ -95,6 +95,69 @@ class DB
     
     return $tables;
   }
+  
+  /**
+   * Evaluate the NUL-to-used ratio of a table.
+   *
+   * Returns an associative array of associative arrays with two keys, 
+   * 'used' and 'unused'; specifying the number of bytes in each column
+   * that are wasted or used by the DB engine.
+   * 
+   * @param string $tableName The name of the table to analyse.
+   * @return array
+   */
+  public static function analyseTable($tableName)
+  {
+    // Get columns 
+    $columns = self::getTableCols($tableName);
+    
+    // Open the data file
+    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    
+    if(!is_readable($tableDataFile))
+    {
+      // Can't read data file
+      throw new FileNotFoundException($tableDataFile);
+    }
+    
+    // Open handle and prepare to keep track of column usage
+    $tableDataHandle = fopen($tableDataFile, 'r');
+    $columnUsage = array();
+    
+    // Initialise array
+    foreach($columns as $columnName => $column)
+    {
+      $columnUsage[$columnName] = array(
+        'used' => 0,
+        'unused' => 0
+      );
+    }
+    
+    // Start reading
+    while(!feof($tableDataHandle))
+    {
+      // Read a row
+      $row = array();
+      
+      // Build up the row 
+      foreach($columns as $columnName => $column)
+      {
+        $segment = fread($tableDataHandle, self::$types[$column['type']]);
+        $unpacked = self::unpackSegment($segment);
+        
+        // Count bytes
+        $segmentLength = self::$types[$column['type']];
+        $unpackedLength = strlen($unpacked);
+        
+        // Tally up
+        $columnUsage[$columnName]['used'] += $unpackedLength;
+        $columnUsage[$columnName]['unused'] += 
+          ($segmentLength - $unpackedLength);
+      }
+    }
+    
+    return $columnUsage;
+  }
    
   /**
    * Convert an array of data into a binstring
