@@ -422,6 +422,23 @@ switch($_GET['act'])
   
   foreach($tables as $table)
   {
+  
+    // Get efficiency
+    $efficiency = DB::analyseTable($table);
+  
+    // Totals
+    $unused = 0;
+    $used = 0;
+    
+    foreach($efficiency as $columnName => $column)
+    {
+      $unused += $column['unused'];
+      $used += $column['used'];
+    }
+    
+    // Percentage
+    $percent = ($used / $unused) * 100;
+  
     ?>
     
           <tr>
@@ -430,6 +447,14 @@ switch($_GET['act'])
                 <?php print $table; ?>
               </a>
             </td>
+            <td style="color: #9f9f9f">
+              <?php 
+                print $percent == 0 ? 
+                '-' : 
+                number_format($percent, 2) . '% efficiency' . 
+                ' (' . $used . ' bytes in use, ' . $unused . ' dead bytes)';
+              ?>
+            </td>
             <td style="width: 50px;">
               <a style=" color: #f00 !important" 
                 href="?port=tables&act=rm_table&table=<?php print $table; ?>">
@@ -437,7 +462,8 @@ switch($_GET['act'])
               </a>
             </td>
             <td style="width: 50px;">
-              <a style="color: #f00;" href="?act=truncate&table=<?php print $table; ?>">Truncate!</a>
+              <a style="color: #f00;" 
+                href="?act=truncate&table=<?php print $table; ?>">Truncate!</a>
             </td>
           </tr>
     
