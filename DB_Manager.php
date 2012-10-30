@@ -18,10 +18,10 @@ switch($_GET['act'])
   case 'truncate':
     
     // Delete the table
-    DB::truncate($_GET['view']);
+    DB::truncate($_GET['table']);
     
     // Redirect
-    header('Location: ?port=tables&view=' . $_GET['view']);    
+    header('Location: ?port=tables');    
   
     break;
     
@@ -239,14 +239,11 @@ switch($_GET['act'])
 <div style="width:100%; background: #dfdfdf; height: 50px;">
   <h1 style="position: relative; top: 15px; left: 20px">Database Manager</h1>
   <ul class="tabs" style="position: relative; top: 26px;">
-    <li class="<?php print ($_GET['port'] == 'db_info' ? 'selected' : ''); ?>">
-      <a href="?port=db_info">DB Info</a>
-    </li>
     <li class="<?php print ($_GET['port'] == 'tables' ? 'selected' : ''); ?>">
       <a href="?port=tables">Tables</a>
     </li>
     <li class="<?php print ($_GET['port'] == 'add_table' ? 'selected' : ''); ?>">
-      <a href="?port=add_table">Add Table</a>
+      <a href="?port=add_table">Add Table...</a>
     </li>
   </ul>
 </div>
@@ -278,7 +275,7 @@ switch($_GET['act'])
         
         <tbody>
         
-        <tr>
+        
         
       <?php
       
@@ -289,29 +286,54 @@ switch($_GET['act'])
         // Show the insertion row
         foreach($table as $columnName => $column)
         {
-          print '<td>' . $columnName . '(' . DB::$types[$column['type']] . '): <input type="text" name="' . $columnName . '" style="width: ' . 
-            DB::$types[$column['type']] * 4 . 'px" /></td>' . "\n";
+          ?>
+          
+          <tr>
+            <td style="padding-left: 20px; height: 40px;">
+              <?php print $columnName; ?>
+              (<?php print ($column['type'] == 'blob' ? 
+                'blob' : DB::$types[$column['type']]); ?>)
+            </td>
+            <td>
+              <input type="text" name="<?php print $columnName; ?>"
+               style="width:<?php print DB::$types[$column['type']] * 4; ?>px" />
+              
+              <?php
+                if($column['auto'])
+                {
+              ?>
+                <br />
+                <em style="font-size: 7pt;">(Blank to invoke Auto Increment value)</em>
+              <?php
+                }
+              ?>
+              
+            </td>
+          </tr>
+            
+          <?php
         }
       
       ?>
       
-        <td>
+        <tr>
+        <td style="padding-left: 20px;">
           <input type="submit" value="Insert!" />
         </td>
-        
         </tr>
+        
         
         </tbody>
         
       </table>
+      
+      <br />
       
     </div>
     
   </form>
     
     <div style="margin-top: 10px;" class="box">
-      
-      <div class="header">Table Content</div>
     
       <table style="width: 100%; border-spacing: 0px;">
         <thead>
@@ -322,15 +344,11 @@ switch($_GET['act'])
         // Produce columns first
         foreach($table as $columnName => $column)
         {
-          print '<td>' . $columnName . '</td>' . "\n";
+          print '<td style="padding-left: 10px;">' . $columnName . 
+            ($column['auto'] ? ' (<em>AUTO<em>)' : '') . '</td>' . "\n";
         }
       
       ?>
-      
-        <td style="width: 70px">
-          <a href="?act=truncate&view=<?php print $_GET['view']; ?>">Truncate</a>
-        </td>
-      
           </tr>
         </thead>
         <tbody>
@@ -349,7 +367,7 @@ switch($_GET['act'])
               
                 foreach($row as $columnName => $value)
                 {
-                  print '<td>' . $value. '</td>' . "\n";
+                  print '<td style="padding-left: 10px;">' . $value. '</td>' . "\n";
                 }
               
               ?>
@@ -391,7 +409,7 @@ switch($_GET['act'])
     
           <tr>
             <td>
-              <a href="?port=tables&view=<?php print $table; ?>">
+              <a style="font-weight: bold" href="?port=tables&view=<?php print $table; ?>">
                 <?php print $table; ?>
               </a>
             </td>
@@ -400,6 +418,9 @@ switch($_GET['act'])
                 href="?port=tables&act=rm_table&table=<?php print $table; ?>">
                 Drop!
               </a>
+            </td>
+            <td style="width: 50px;">
+              <a style="color: #f00;" href="?act=truncate&table=<?php print $table; ?>">Truncate!</a>
             </td>
           </tr>
     
