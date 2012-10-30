@@ -209,7 +209,7 @@ class DB
    *
    *   array(
    *     'columnName' => array(
-   *        'primary' => boolean,
+   *        'auto' => boolean,
    *        'type' => string
    *     )
    *     ...
@@ -237,9 +237,10 @@ class DB
         ' already exists in the DB');
     }
     
-    // Create the directory and the blob directory
+    // Create the directory and the blobs/autos directories
     mkdir($tablePath);
     mkdir($tablePath . '/blobs'); 
+    mkdir($tablePath . '/autos'); 
     
     // Write base files
     touch($tablePath . '/data');
@@ -249,22 +250,10 @@ class DB
     $defintionHandle = fopen($tablePath . '/definition', 'w');
     
     // Build the definition text
-    $hasPrimary = false;
     $columnNamesWritten = array();
     
     foreach($columns as $columnName => $column)
     {
-      if($column['primary'])
-      {
-        if($hasPrimary)
-        {
-          throw new SchemaException('Table ' . $tableName . 
-            ' cannot have multiple primary key columns');
-        }
-        
-        $hasPrimary = true;
-      }
-      
       // Check type is valid
       if(!array_key_exists($column['type'], self::$types))
       {
@@ -274,7 +263,15 @@ class DB
       
       // Write the column to the definition file
       fwrite($defintionHandle, $column['type'] . ' ' . $columnName . 
-        ($column['primary'] ? ' primary' : ''));
+        ($column['auto'] ? ' auto' : ''));
+        
+      // If this is an "auto" column, create a file to store the current
+      // auto value
+      if($column['auto'])
+      {
+        file_put_contents($tablePath . '/autos/' . $columnName, 
+          '1');
+      }
         
       // Not last column? Linebreak required
       if(count($columnNamesWritten) != count($columns) - 1)
@@ -285,6 +282,9 @@ class DB
       // Remember that this column has been written
       $columnNamesWritten[] = $columnName;
     }
+    
+    // Close file
+    fclose($defintionHandle);
     
     return true;
   }
@@ -305,6 +305,21 @@ class DB
     }
     
     $tablePath = self::$dataPath . '/' . $tableName . '.table';
+    
+    // Get the columns
+    $columns = self::getTableCols($tableName);
+    
+    // Remove auto values
+    foreach($columns as $columnName => $column)
+    {
+      if($column['auto'])
+      {
+        unlink($tablePath . '/autos/' . $columnName);
+      }
+    }
+    
+    // Remove auto directory
+    rmdir($tablePath . '/autos');
     
     // Remove all blob files by truncating the table first
     self::truncate($tableName);
@@ -353,15 +368,29 @@ class DB
     // Get the columns for the specified table.
     $columns = self::getTableCols($tableName);
     
-    // Get the primary key value
-    $pKeyValue = current($values);
-    
     // Write to the end of the file
     foreach($columns as $columnName => $column)
     {
       // Write the segment
       $segSize = self::$types[$column['type']];
      
+      // Is the column auto-incrementing and is the increment value desired?
+      if($column['auto'] && $values[$columnName] == false)
+      {
+        // Build the column path
+        $autoColumnPath = self::$dataPath . '/' . $tableName . '.table' . 
+          '/autos/' . $columnName;
+        
+        // Retrieve the value
+        $value = intval(file_get_contents($autoColumnPath));  
+          
+        // Write back the value
+        file_put_contents($autoColumnPath, strval($value + 1));
+  
+        // Overwrite column value
+        $values[$columnName] = $value;
+      }
+  
       // Blob?
       if($column['type'] == 'blob')
       { 
@@ -376,7 +405,7 @@ class DB
           self::$types[$column['type']])),
           self::$types[$column['type']]);
       }
-
+      
       fwrite($tableDataHandle, $segData);
     }
     
@@ -810,7 +839,7 @@ class DB
    * The array will be formatted:
    * 
    *   array(
-   *     'columnName' => array('type' => type, 'primary' => primary),
+   *     'columnName' => array('type' => type (string), 'auto' => auto (boolean)),
    *     ...
    *   )
    *
@@ -867,7 +896,7 @@ class DB
       // Add to collecton
       $columns[$columnDetails[1]] = array(
         'type' => $columnDetails[0],
-        'primary' => (count($columnDetails) > 2 && $columnDetails[2] == 'primary')
+        'auto' => (count($columnDetails) > 2 && $columnDetails[2] == 'auto')
       );
     }
     
