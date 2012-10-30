@@ -13,6 +13,12 @@ include 'classes/datasource/Result.class.php';
 // Open
 DB::open('./db/');
 
+// No port?
+if(!$_GET['port'])
+{
+  $_GET['port'] = 'tables';
+}
+
 switch($_GET['act'])
 {
   case 'truncate':
