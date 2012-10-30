@@ -38,6 +38,10 @@ class DB
     
     // Integer types
     'int' => 8,
+    'int16' => 16,
+    
+    // Boolean
+    'bool' => 1,
     
     // String types
     'str32' => 32,
