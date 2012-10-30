@@ -287,11 +287,8 @@ switch($_GET['act'])
         
         <tbody>
         
-        
-        
       <?php
-      
-          
+
         // Get table
         $table = DB::getTableCols($_GET['view']);
       
@@ -529,10 +526,24 @@ switch($_GET['act'])
               <td><input type="checkbox" class="auto_cb" value="1" name="nr_1_auto" /></td>
               <td>
                 <select style="width: 100%" class="type_sel" name="nr_1_type">
-                  <option value="int">int</option>
-                  <option value="str32">str32</option>
-                  <option value="str64">str64</option>
-                  <option value="blob">blob</option>
+                
+                <?php
+                
+                  $types = DB::$types;
+                  
+                  foreach($types as $type => $size)
+                  {
+                    
+                ?>
+                
+                  <option value="<?php print $type; ?>"><?php print $type; ?></option>
+                  
+                <?php
+                
+                  }
+                
+                ?>
+                  
                 </select>
               </td>
               <td><input name="nr_1_name" type="text" class="name_text" style="width: 98%; margin-left: 4px" /></td>
