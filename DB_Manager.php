@@ -63,7 +63,7 @@ switch($_GET['act'])
     for($cID = 1; $cID <= $columnCount; $cID ++)
     {
       $columns[$_POST['nr_' . $cID . '_name']] = array(
-        'primary' => 0,
+        'auto' => $_POST['nr_' . $cID . '_auto'] == '1',
         'type' => $_POST['nr_' . $cID . '_type']
       );
     }
@@ -187,7 +187,6 @@ $tables = DB::listTables();
       $(new_col).find('input[type="checkbox"]').prop('checked', false);
       
       // Set names
-      $(new_col).find('.index_cb').attr('name', 'nr_' + cols + '_index');
       $(new_col).find('.auto_cb').attr('name', 'nr_' + cols + '_auto');
       $(new_col).find('.type_sel').attr('name', 'nr_' + cols + '_type');
       $(new_col).find('.name_text').attr('name', 'nr_' + cols + '_name');
@@ -418,7 +417,6 @@ $tables = DB::listTables();
             
             <tr class="header">
               <td style="padding-left: 10px; width: 50px">Auto?</td>
-              <td style="padding-left: 10px; width: 50px">Index?</td>
               <td style="padding-left: 10px; width: 250px;">Type</td>
               <td style="padding-left: 10px;">Name</td>
             </tr>
@@ -430,8 +428,7 @@ $tables = DB::listTables();
           
             <tr class="column_row">
               
-              <td><input type="checkbox" class="auto_cb" name="nr_1_auto" /></td>
-              <td><input type="checkbox" class="index_cb" name="nr_1_index" /></td>
+              <td><input type="checkbox" class="auto_cb" value="1" name="nr_1_auto" /></td>
               <td>
                 <select style="width: 100%" class="type_sel" name="nr_1_type">
                   <option value="int">int</option>
