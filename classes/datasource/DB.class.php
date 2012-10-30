@@ -408,8 +408,9 @@ class DB
       if($column['type'] == 'blob')
       { 
         $segData = self::getChrs(
-          self::linkBlob($tableName, $values[$columnName]),
-          self::$types['blob']);
+            str_split(self::linkBlob($tableName, $values[$columnName])),
+            self::$types['blob']
+          );
       }
       else
       {
