@@ -15,7 +15,7 @@ final class SchemaException extends Exception
 }
  
 /**
- * FileDB Class
+ * DB Class
  * Provides interaction with the stored data.
  *
  * @package lightgroup
@@ -27,14 +27,14 @@ class DB
    * 
    * @var string
    */
-  public static $dataPath = '';
+  public $dataPath = '';
   
   /**
    * Data types
    *
    * @var array
    */
-  public static $types = array(
+  public $types = array(
     
     // Integer types
     'int' => 8,
@@ -59,12 +59,12 @@ class DB
    * @param string $directory The data store directory to use.
    * @return boolean
    */
-  public static function open($directory)
+  public function __construct($directory)
   {
     if(File::isWritable($directory))
     {
       // Directory is OK
-      self::$dataPath = $directory;
+      $this->dataPath = $directory;
     }
     else
     {
@@ -80,16 +80,16 @@ class DB
    *
    * @return array
    */
-  public static function listTables()
+  public function listTables()
   {
     // Read the DB directory
     $tables = array();
     
-    if($dataHandle = opendir(self::$dataPath))
+    if($dataHandle = opendir($this->dataPath))
     {
       while(($file = readdir($dataHandle)) !== false)
       {        
-        if($file != '.' && $file != '..' && is_dir(self::$dataPath . '/' . $file) && 
+        if($file != '.' && $file != '..' && is_dir($this->dataPath . '/' . $file) && 
           strpos($file, '.table') !== false)
         {
           $tables[] = str_replace('.table', '', $file);
@@ -110,13 +110,13 @@ class DB
    * @param string $tableName The name of the table to analyse.
    * @return array
    */
-  public static function analyseTable($tableName)
+  public function analyseTable($tableName)
   {
     // Get columns 
     $columns = self::getTableCols($tableName);
     
     // Open the data file
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_readable($tableDataFile))
     {
@@ -146,11 +146,11 @@ class DB
       // Build up the row 
       foreach($columns as $columnName => $column)
       {
-        $segment = fread($tableDataHandle, self::$types[$column['type']]);
+        $segment = fread($tableDataHandle, $this->types[$column['type']]);
         $unpacked = self::unpackSegment($segment);
         
         // Count bytes
-        $segmentLength = self::$types[$column['type']];
+        $segmentLength = $this->types[$column['type']];
         $unpackedLength = strlen($unpacked);
         
         // Tally up
@@ -170,7 +170,7 @@ class DB
    * @param integer $pad Optionally a padding value to pad to with NUL bytes.
    * @return string
    */
-  private static function getChrs(array $data, $pad = -1)
+  private function getChrs(array $data, $pad = -1)
   {
     $result = '';
     $bCount = 0;
@@ -213,7 +213,7 @@ class DB
    * @param string $segment The segment to unpack.
    * @return string
    */
-  private static function unpackSegment($segment)
+  private function unpackSegment($segment)
   {
     $realData = array();
     $characters = str_split(strval($segment));
@@ -237,11 +237,11 @@ class DB
    * @param string $tableName The table to truncate. 
    * @return boolean.
    */
-  public static function truncate($tableName)
+  public function truncate($tableName)
   {
     // Easy, just clear the file, no schema data is stored 
     // in datafiles.
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_writeable($tableDataFile))
     {
@@ -254,7 +254,7 @@ class DB
     fclose($truncateHandle);
 
     // Remove blob files associated with the table
-    $tableBlobsPath = self::$dataPath . '/' . $tableName . '.table/blobs/';
+    $tableBlobsPath = $this->dataPath . '/' . $tableName . '.table/blobs/';
     
     if(!is_writable($tableBlobsPath))
     {
@@ -294,15 +294,15 @@ class DB
    * @param array $columns An associative array describing the columns.
    * @return boolean
    */ 
-  public static function createTable($tableName, array $columns)
+  public function createTable($tableName, array $columns)
   {
     // Check if the DB is in a writable state
-    if(!is_writable(self::$dataPath))
+    if(!is_writable($this->dataPath))
     {
-      throw new PermissionDeniedException(self::$dataPath);
+      throw new PermissionDeniedException($this->dataPath);
     }
     
-    $tablePath = self::$dataPath . '/' . $tableName . '.table';
+    $tablePath = $this->dataPath . '/' . $tableName . '.table';
     
     // Check if the table name is taken
     if(file_exists($tablePath))
@@ -329,7 +329,7 @@ class DB
     foreach($columns as $columnName => $column)
     {
       // Check type is valid
-      if(!array_key_exists($column['type'], self::$types))
+      if(!array_key_exists($column['type'], $this->types))
       {
         throw new SchemaException('Type ' . $column['type'] . 
           ' is not defined in the DB');
@@ -370,15 +370,15 @@ class DB
    * @param string $tableName The name of the table to remove.
    * @return boolean
    */ 
-  public static function deleteTable($tableName)
+  public function deleteTable($tableName)
   {
     // Check if the DB is in a writable state
-    if(!is_writable(self::$dataPath))
+    if(!is_writable($this->dataPath))
     {
-      throw new PermissionDeniedException(self::$dataPath);
+      throw new PermissionDeniedException($this->dataPath);
     }
     
-    $tablePath = self::$dataPath . '/' . $tableName . '.table';
+    $tablePath = $this->dataPath . '/' . $tableName . '.table';
     
     // Get the columns
     $columns = self::getTableCols($tableName);
@@ -417,13 +417,13 @@ class DB
    * @param array $values An associative array containing the values.
    * @return Result
    */
-  public static function insert($tableName, array $values)
+  public function insert($tableName, array $values)
   {
     // Create a result
     $result = new Result();
   
     // Open the data file
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_writeable($tableDataFile))
     {
@@ -446,13 +446,13 @@ class DB
     foreach($columns as $columnName => $column)
     {
       // Write the segment
-      $segSize = self::$types[$column['type']];
+      $segSize = $this->types[$column['type']];
      
       // Is the column auto-incrementing and is the increment value desired?
       if($column['auto'] && $values[$columnName] == false)
       {
         // Build the column path
-        $autoColumnPath = self::$dataPath . '/' . $tableName . '.table' . 
+        $autoColumnPath = $this->dataPath . '/' . $tableName . '.table' . 
           '/autos/' . $columnName;
         
         // Retrieve the value
@@ -476,15 +476,15 @@ class DB
       { 
         $segData = self::getChrs(
             str_split(self::linkBlob($tableName, $values[$columnName])),
-            self::$types['blob']
+            $this->types['blob']
           );
       }
       else
       {
         $segData = self::getChrs(
           str_split(substr($values[$columnName], 0,
-          self::$types[$column['type']])),
-          self::$types[$column['type']]);
+          $this->types[$column['type']])),
+          $this->types[$column['type']]);
       }
       
       fwrite($tableDataHandle, $segData);
@@ -508,10 +508,10 @@ class DB
    * @param string $blobData The data to store.
    * @return string
    */
-  private static function linkBlob($tableName, $blobData)
+  private function linkBlob($tableName, $blobData)
   {
     // Path to the blobs directory for the table
-    $blobsPath = self::$dataPath . '/' . $tableName . '.table/blobs/';
+    $blobsPath = $this->dataPath . '/' . $tableName . '.table/blobs/';
 
     // Check it is possible to create the blob.
     if(!File::isWritable($blobsPath))
@@ -540,10 +540,10 @@ class DB
    * @param string $blobID The ID of the blob to remove.
    * @return boolean 
    */
-  private static function unlinkBlob($tableName, $blobID)
+  private function unlinkBlob($tableName, $blobID)
   {
     // Path to the blob file
-    $blobPath = self::$dataPath . '/' . $tableName .
+    $blobPath = $this->dataPath . '/' . $tableName .
       '.table/blobs/' . $blobID;
 
     // Check it is possible to create the blob.
@@ -566,10 +566,10 @@ class DB
    * @param string $blobID The ID of the blob to resolve.
    * @return string
    */
-  private static function resolveBlob($tableName, $blobID)
+  private function resolveBlob($tableName, $blobID)
   {
     // Path to the blob file
-    $blobPath = self::$dataPath . '/' . $tableName .
+    $blobPath = $this->dataPath . '/' . $tableName .
       '.table/blobs/' . $blobID;
 
     // Check it is possible to read the blob.
@@ -590,7 +590,7 @@ class DB
    * @param Predicate $predicate Optionally a predicate.
    * @return Result
    */
-  public static function delete($tableName, $predicate = null)
+  public function delete($tableName, $predicate = null)
   {  
     // Create a result
     $result = new Result();
@@ -602,11 +602,11 @@ class DB
     $widths = array();
     foreach($structure as $columnName => $column)
     {
-      $widths[$columnName] = self::$types[$column['type']];
+      $widths[$columnName] = $this->types[$column['type']];
     }
 
     // Open the data file
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_readable($tableDataFile))
     {
@@ -631,7 +631,7 @@ class DB
       // Build up the row 
       foreach($structure as $columnName => $column)
       {
-        $segment = fread($tableDataHandle, self::$types[$column['type']]);
+        $segment = fread($tableDataHandle, $this->types[$column['type']]);
         
         // Nothing read?
         if(strlen($segment) == 0)
@@ -683,7 +683,7 @@ class DB
    * @param Predicate $predicate Optionally a predicate.
    * @return Result
    */
-  public static function update($tableName, array $changes, $predicate = null)
+  public function update($tableName, array $changes, $predicate = null)
   {  
     // Create a result
     $result = new Result();
@@ -698,7 +698,7 @@ class DB
     $widths = array();
     foreach($structure as $columnName => $column)
     {
-      $widths[$columnName] = self::$types[$column['type']];
+      $widths[$columnName] = $this->types[$column['type']];
     }
     
     // End timer
@@ -707,7 +707,7 @@ class DB
       $structureEndTime - $structureStartTime);
 
     // Open the data file
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_readable($tableDataFile))
     {
@@ -732,7 +732,7 @@ class DB
       // Build up the row 
       foreach($structure as $columnName => $column)
       {
-        $segment = fread($tableDataHandle, self::$types[$column['type']]);
+        $segment = fread($tableDataHandle, $this->types[$column['type']]);
         
         // Nothing read?
         if(strlen($segment) == 0)
@@ -808,7 +808,7 @@ class DB
    * @param Predicate $predicate Optionally a predicate to apply to the selection.
    * @return Result
    */
-  public static function select($tableName, $predicate = null, $limitCount = -1,
+  public function select($tableName, $predicate = null, $limitCount = -1,
     $limitStart = -1)
   {  
     // Start timer
@@ -827,7 +827,7 @@ class DB
     $widths = array();
     foreach($structure as $columnName => $column)
     {
-      $widths[$columnName] = self::$types[$column['type']];
+      $widths[$columnName] = $this->types[$column['type']];
       $result->addColumn($columnName);
     }
     
@@ -836,7 +836,7 @@ class DB
       $structureEndTime - $structureStartTime);
     
     // Open the data file
-    $tableDataFile = self::$dataPath . '/' . $tableName . '.table/data';
+    $tableDataFile = $this->dataPath . '/' . $tableName . '.table/data';
     
     if(!is_readable($tableDataFile))
     {
@@ -862,7 +862,7 @@ class DB
       
       foreach($structure as $columnName => $column)
       {
-        $segment = fread($tableDataHandle, self::$types[$column['type']]);
+        $segment = fread($tableDataHandle, $this->types[$column['type']]);
         
         // Nothing read?
         if(strlen($segment) == 0)
@@ -928,13 +928,13 @@ class DB
    * @param string $tableName The table to retreive columns for.
    * @return array
    */
-  public static function getTableCols($tableName)
+  public function getTableCols($tableName)
   {
     // Collect table column info
     $columns = array();
   
     // Read column data file for the table
-    $tableDefsFile = self::$dataPath . '/' . $tableName . '.table/definition';
+    $tableDefsFile = $this->dataPath . '/' . $tableName . '.table/definition';
     
     if(!is_readable($tableDefsFile))
     {
@@ -961,7 +961,7 @@ class DB
       $columnDetails = preg_split('/[\t\s]/', $columnDef, -1, PREG_SPLIT_NO_EMPTY);
       
       // Check type
-      if(!array_key_exists($columnDetails[0], self::$types))
+      if(!array_key_exists($columnDetails[0], $this->types))
       {
         throw new SchemaException('Column type "' . $columnDetails[0] . 
           '" is undefined in table ' . $tableName);

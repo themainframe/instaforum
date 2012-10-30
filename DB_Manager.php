@@ -11,7 +11,7 @@ include 'classes/datasource/Predicate.class.php';
 include 'classes/datasource/Result.class.php';
 
 // Open
-DB::open('./db/');
+$DB = new DB('./db/');
 
 // No port?
 if(!$_GET['port'])
@@ -24,7 +24,7 @@ switch($_GET['act'])
   case 'truncate':
     
     // Delete the table
-    DB::truncate($_GET['table']);
+    $DB->truncate($_GET['table']);
     
     // Redirect
     header('Location: ?port=tables');    
@@ -33,14 +33,14 @@ switch($_GET['act'])
     
   case 'rm_row':
   
-    DB::delete($_GET['view'], Predicate::_equal(new Value($_GET['column']), $_GET['value']));
+    $DB->delete($_GET['view'], Predicate::_equal(new Value($_GET['column']), $_GET['value']));
   
     break;
     
   case 'insert':
   
     // Get the cols first
-    $table = DB::getTableCols($_GET['view']);
+    $table = $DB->getTableCols($_GET['view']);
   
     // Build values
     $values = array();
@@ -50,7 +50,7 @@ switch($_GET['act'])
     }
     
     // Store
-    DB::insert($_GET['view'], $values);
+    $DB->insert($_GET['view'], $values);
     
     // Redirect
     header('Location: ?port=tables&view=' . $_GET['view']);
@@ -60,7 +60,7 @@ switch($_GET['act'])
     
   case 'rm_table':
   
-    DB::deleteTable($_GET['table']);
+    $DB->deleteTable($_GET['table']);
   
     break;
     
@@ -88,7 +88,7 @@ switch($_GET['act'])
     
     // Check if name is taken
     $tableName = $_POST['nr_name'];
-    $currentTables = DB::listTables();
+    $currentTables = $DB->listTables();
     
     if(in_array($tableName, $currentTables))
     {
@@ -97,7 +97,7 @@ switch($_GET['act'])
     }
     
     // Do the insertion
-    DB::createTable($tableName, $columns);
+    $DB->createTable($tableName, $columns);
     
     // Redirect to table view
     header('Location: ?port=tables&view=' . $tableName);
@@ -290,7 +290,7 @@ switch($_GET['act'])
       <?php
 
         // Get table
-        $table = DB::getTableCols($_GET['view']);
+        $table = $DB->getTableCols($_GET['view']);
       
         // Show the insertion row
         foreach($table as $columnName => $column)
@@ -301,11 +301,11 @@ switch($_GET['act'])
             <td style="padding-left: 20px; height: 40px;">
               <?php print $columnName; ?>
               (<?php print ($column['type'] == 'blob' ? 
-                'blob' : DB::$types[$column['type']]); ?>)
+                'blob' : $DB->types[$column['type']]); ?>)
             </td>
             <td>
               <input type="text" name="<?php print $columnName; ?>"
-               style="width:<?php print (DB::$types[$column['type']] * 4) + 30; ?>px" />
+               style="width:<?php print ($DB->types[$column['type']] * 4) + 30; ?>px" />
               
               <?php
                 if($column['auto'])
@@ -365,7 +365,7 @@ switch($_GET['act'])
       <?php
         
         // Produce rows
-        $rows = DB::select($_GET['view']);
+        $rows = $DB->select($_GET['view']);
         
         while($row = $rows->next())
         {
@@ -421,13 +421,13 @@ switch($_GET['act'])
   <?php
   
   // Tables list panel
-  $tables = DB::listTables();
+  $tables = $DB->listTables();
   
   foreach($tables as $table)
   {
   
     // Get efficiency
-    $efficiency = DB::analyseTable($table);
+    $efficiency = $DB->analyseTable($table);
   
     // Totals
     $unused = 0;
@@ -529,7 +529,7 @@ switch($_GET['act'])
                 
                 <?php
                 
-                  $types = DB::$types;
+                  $types = $DB->types;
                   
                   foreach($types as $type => $size)
                   {
