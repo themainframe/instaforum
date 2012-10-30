@@ -390,6 +390,12 @@ class DB
         // Overwrite column value
         $values[$columnName] = $value;
       }
+      
+      // Int type?
+      if($column['type'] == 'int')
+      {
+        $values[$columnName] = intval($values[$columnName]);
+      }
   
       // Blob?
       if($column['type'] == 'blob')
