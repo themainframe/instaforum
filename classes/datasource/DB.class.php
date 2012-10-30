@@ -121,6 +121,13 @@ class DB
       $bCount ++;
     }
     
+    // Empty string case
+    if(count($data) == 1 && $data[0] == '')
+    {
+      $data = array();
+      $bCount = 0;
+    }
+
     // Pad with NUL (0x00) bytes
     if($pad)
     {
