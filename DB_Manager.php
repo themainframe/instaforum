@@ -440,7 +440,7 @@ switch($_GET['act'])
     }
     
     // Percentage
-    $percent = ($used / $unused) * 100;
+    $percent = ($used / ($unused + $used)) * 100;
   
     ?>
     
