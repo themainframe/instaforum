@@ -182,17 +182,10 @@ class Predicate
    * @param integer $type Optionally, the type of the predicate.  Default -1.
    * @return Predicate
    */
-  public function __construct($leftValue, $rightValue, $type = -1)
+  public function __construct($leftValue, $rightValue)
   {
     $this->leftValue = $leftValue;
     $this->rightValue = $rightValue;
-    
-    // $type is unchecked - for now.
-    $intType = intval($type);
-    if($intType > -1)
-    {
-      $this->predicateType = intval($intType);
-    }
   }
 
   /**
