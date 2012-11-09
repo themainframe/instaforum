@@ -126,6 +126,10 @@ class DB
     
     // Open handle and prepare to keep track of column usage
     $tableDataHandle = fopen($tableDataFile, 'r');
+    
+    // Lock the table for reading
+    flock($tableDataHandle, LOCK_SH);
+
     $columnUsage = array();
     
     // Initialise array
@@ -160,6 +164,9 @@ class DB
       }
     }
     
+    // Unlock and close 
+    fclose($tableDataHandle);
+ 
     return $columnUsage;
   }
    
@@ -323,6 +330,9 @@ class DB
     // Open definition file for writing
     $defintionHandle = fopen($tablePath . '/definition', 'w');
     
+    // Lock
+    flock($definitionHandle, LOCK_EX);
+    
     // Build the definition text
     $columnNamesWritten = array();
     
@@ -357,7 +367,7 @@ class DB
       $columnNamesWritten[] = $columnName;
     }
     
-    // Close file
+    // Close file & clear the lock
     fclose($defintionHandle);
     
     return true;
@@ -434,6 +444,9 @@ class DB
     // Read lines
     $tableDataHandle = fopen($tableDataFile, 'a');
     
+    // Lock
+    flock($tableDataHandle, LOCK_EX);
+    
     if(!$tableDataHandle)
     {
       throw new IOException($tableDataFile);
@@ -494,7 +507,7 @@ class DB
     $result->setAffectedRows(1);
     $result->finalise();
     
-    // Close up
+    // Close up and clear the lock
     fclose($tableDataHandle);
     
     return $result;
@@ -616,6 +629,9 @@ class DB
     
     $tableDataHandle = fopen($tableDataFile, 'r');
     
+    // Lock
+    flock($tableDataHandle, LOCK_EX);
+    
     // Collect new data
     $rows = array(); 
 
@@ -655,6 +671,9 @@ class DB
       }
       
     }
+    
+    // Close & clear the lock
+    fclose($tableDataHandle);
     
     // Truncate
     self::truncate($tableName);
@@ -717,6 +736,9 @@ class DB
     
     $tableDataHandle = fopen($tableDataFile, 'r');
     
+    // Lock
+    flock($tableDataHandle, LOCK_SH);
+    
     // Collect new data
     $rows = array(); 
 
@@ -772,6 +794,9 @@ class DB
       
       $rows[] = $row;
     }
+    
+    // Close file & clear the lock
+    fclose($tableDataHandle);
     
     // Truncate
     self::truncate($tableName);
@@ -845,6 +870,10 @@ class DB
     }
     
     $tableDataHandle = fopen($tableDataFile, 'r');
+    
+    // Lock
+    flock($tableDataHandle, LOCK_SH);
+    
     $initialLimit = $limitCount;
     
     // Start reading
@@ -908,6 +937,9 @@ class DB
     
     $result->finalise();
     
+    // Close the file & clear the lock
+    fclose($tableDataHandle);
+    
     $totalEndTime = microtime(true);
     $result->addProfileTime('TotalTime', 
       $totalEndTime - $totalStartTime);
@@ -944,6 +976,9 @@ class DB
     
     // Read lines
     $tableDefsHandle = fopen($tableDefsFile, 'r');
+    
+    // Lock
+    flock($tableDefsHandle, LOCK_SH);
     
     if(!$tableDefsHandle)
     {
