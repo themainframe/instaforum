@@ -7,8 +7,6 @@
  
 /**
  * Schema integrity exception
- *
- * @package lightgroup
  */
 final class SchemaException extends Exception
 {
@@ -17,8 +15,6 @@ final class SchemaException extends Exception
 /**
  * DB Class
  * Provides interaction with the stored data.
- *
- * @package lightgroup
  */
 class DB
 {
