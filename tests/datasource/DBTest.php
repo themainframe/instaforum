@@ -20,6 +20,7 @@ $path = getcwd();
 
 // Create a database for tests to work in
 mkdir(DB_PATH);
+chmod('.', 777);
 chmod(DB_PATH, 777);
 
 /**
