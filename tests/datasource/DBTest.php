@@ -213,6 +213,10 @@ class DBTest extends PHPUnit_Framework_TestCase
     
     // Get array and validate contents
     $arrayRow = (array)$row;
+    
+    var_dump($arrayRow);
+    var_dump($this->testRow);
+    
     $this->assertTrue($arrayRow === $this->testRow);
   }
   
