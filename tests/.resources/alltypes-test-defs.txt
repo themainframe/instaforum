@@ -1,0 +1,7 @@
+int col_a auto
+int16 col_b
+bool col_c
+str32 col_d
+str64 col_e
+blob col_f
+blob col_g
