@@ -20,7 +20,7 @@ $path = getcwd();
 
 // Create a database for tests to work in
 mkdir(DB_PATH);
-chmod(DB_PATH, 777);
+chmod(DB_PATH, 0777);
 
 // Verify
 print DB_PATH . ' is' . (file_exists(DB_PATH) ? '' : ' NOT') . ' present.' . "\n";
