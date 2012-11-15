@@ -747,6 +747,9 @@ class DB
       // Read a row
       $row = array();
       
+      // Keep a blob-resolved version for predicate testing
+      $rowResolved = array();
+      
       // Build up the row 
       foreach($structure as $columnName => $column)
       {
@@ -758,25 +761,32 @@ class DB
           break 2;
         }
         
+        // Get row value for column
         $row[$columnName] = self::unpackSegment($segment);
+        $rowResolved[$columnName] = self::unpackSegment($segment);
         
-        // Blob resolution required?
+        // Blob type?
         if($column['type'] == 'blob')
         {
-          $row[$columnName] = self::resolveBlob($tableName, $row[$columnName]);
+          // Keep the resolved copy
+          $rowResolved[$columnName] = $this->resolveBlob($tableName, $row[$columnName]);
         }
       }
       
       // Check the row against the predicate if present
-      if(!$predicate || $predicate->val($row))
+      if(!$predicate || $predicate->val($rowResolved))
       {
         // Perform the update - merge one array into the other
         foreach($structure as $cName => $cInfo)
         {
           // If the type is a blob, unlink it, it is now stale
       	  if($cInfo['type'] == 'blob')
-      	  {
+      	  {        
+      	    // Unlink the stale blob
       	    self::unlinkBlob($tableName, $row[$cName]);
+      	    
+      	    // Set real value
+      	    $row[$cName] = $rowResolved[$cName];
       	  }
          
           if(array_key_exists($cName, $changes))
@@ -785,7 +795,7 @@ class DB
           }
         }
         
-        $alteredRows ++;
+        $affectedRows ++;
       }
       
       $rows[] = $row;
