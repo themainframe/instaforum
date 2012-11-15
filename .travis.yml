@@ -5,5 +5,8 @@ language: php
 php:
   - "5.4"
 
+# Fix permissions first
+before_script: chmod 777 .
+
 # Run all tests in the unit tests directory
 script: phpunit tests/
