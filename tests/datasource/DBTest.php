@@ -42,7 +42,7 @@ class DBTest extends PHPUnit_Framework_TestCase
    */
   protected $testRow = array(
     'col_a' => 12345678,
-    'col_b' => 1234567812345678,  
+    'col_b' => 1352956159,  
     'col_c' => true,
     'col_d' => 'Hello world!',
     'col_e' => 'Hello world in 64 bytes!',
@@ -213,9 +213,6 @@ class DBTest extends PHPUnit_Framework_TestCase
     
     // Get array and validate contents
     $arrayRow = (array)$row;
-    
-    var_dump($arrayRow);
-    var_dump($this->testRow);
     
     $this->assertTrue($arrayRow === $this->testRow);
   }
