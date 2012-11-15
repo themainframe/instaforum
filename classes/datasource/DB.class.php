@@ -324,7 +324,7 @@ class DB
     touch($tablePath . '/definition');
     
     // Open definition file for writing
-    $defintionHandle = fopen($tablePath . '/definition', 'w');
+    $definitionHandle = fopen($tablePath . '/definition', 'w');
     
     // Lock
     flock($definitionHandle, LOCK_EX);
@@ -342,12 +342,12 @@ class DB
       }
       
       // Write the column to the definition file
-      fwrite($defintionHandle, $column['type'] . ' ' . $columnName . 
-        ($column['auto'] ? ' auto' : ''));
+      fwrite($definitionHandle, $column['type'] . ' ' . $columnName . 
+        (array_key_exists('auto', $column) && $column['auto'] ? ' auto' : ''));
         
       // If this is an "auto" column, create a file to store the current
       // auto value
-      if($column['auto'])
+      if(array_key_exists('auto', $column) && $column['auto'])
       {
         file_put_contents($tablePath . '/autos/' . $columnName, 
           '1');
@@ -356,7 +356,7 @@ class DB
       // Not last column? Linebreak required
       if(count($columnNamesWritten) != count($columns) - 1)
       {
-        fwrite($defintionHandle, "\n");
+        fwrite($definitionHandle, "\n");
       }
       
       // Remember that this column has been written
@@ -364,7 +364,7 @@ class DB
     }
     
     // Close file & clear the lock
-    fclose($defintionHandle);
+    fclose($definitionHandle);
     
     return true;
   }
