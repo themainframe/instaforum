@@ -264,8 +264,14 @@ class DBTest extends PHPUnit_Framework_TestCase
     // stdClass type?
     $this->assertInstanceOf('stdClass', $updatedRow);
     
+    
+    
     // Get array and validate contents
     $arrayUpdatedRow = (array)$updatedRow;
+    
+    var_dump($arrayUpdatedRow);
+    var_dump($this->testRowAppliedMask);
+    
     $this->assertTrue($arrayUpdatedRow === $this->testRowAppliedMask);
   }
   
