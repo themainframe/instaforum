@@ -817,6 +817,32 @@ class DB
     return $result;
   }
  
+  /**
+   * Change a DB-typed value into a PHP-typed value.
+   * 
+   * @param mixed $value The value to modify.
+   * @param string $dbType The name of the type.
+   * @return mixed
+   */
+  private function internalType($value, $dbType)
+  {
+    // Catch int
+    if(strpos($dbType, 'int') === 0)
+    {
+      // Cast to int 
+      return intval($value);
+    }
+    
+    // Catch bool
+    if(strpos($dbType, 'bool') === 0)
+    {
+      // Cast to boolean
+      return (boolean)$value;
+    }
+    
+    // All other types are string PHP types
+    return $value;
+  }
 
   /**
    * Select one or more rows from the database, optionally applying a predicate.
@@ -895,7 +921,9 @@ class DB
           break 2;
         }
         
-        $row[$columnName] = self::unpackSegment($segment);
+        $row[$columnName] = 
+          $this->internalType(self::unpackSegment($segment), 
+          $column['type']);
         
         // Blob resolution required?
         if($column['type'] == 'blob')
@@ -903,7 +931,8 @@ class DB
           $blobResolveStartTime = microtime(true);
           
           // Resolve the blob
-          $row[$columnName] = self::resolveBlob($tableName, $row[$columnName]);
+          $row[$columnName] = self::resolveBlob($tableName,
+            $row[$columnName]);
           
           $blobResolveEndTime = microtime(true);
           $result->addProfileTime('ResolvingBlobs', 
