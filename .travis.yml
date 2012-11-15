@@ -1,0 +1,9 @@
+# Language is PHP
+language: php
+
+# Attribs for PHP
+php:
+  - "5.4"
+
+# Run all tests in the unit tests directory
+script: phpunit tests/
