@@ -22,6 +22,10 @@ $path = getcwd();
 mkdir(DB_PATH);
 chmod(DB_PATH, 777);
 
+// Verify
+print DB_PATH . ' is' . (file_exists(DB_PATH) ? ' NOT') . ' present.' . "\n";
+print DB_PATH . ' is' . (is_writable(DB_PATH) ? ' NOT') . ' writable.' . "\n";
+
 /**
  * DB Test class
  * Evaluates the DB class.
