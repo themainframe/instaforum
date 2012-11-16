@@ -41,7 +41,7 @@ class DBTest extends PHPUnit_Framework_TestCase
    * @var A test row to insert
    */
   protected $testRow = array(
-    'col_a' => 12345678,
+    'col_a' => 98765432,
     'col_b' => 1352956159,  
     'col_c' => true,
     'col_d' => 'Hello world!',
