@@ -934,9 +934,7 @@ class DB
         $row[$columnName] = 
           $this->internalType(self::unpackSegment($segment), 
           $column['type']);
-        
-        print_r("Unpacked internal type " . $row[$columnName]);
-        
+     
         // Blob resolution required?
         if($column['type'] == 'blob')
         {
