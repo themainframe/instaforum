@@ -149,23 +149,23 @@ class Predicate
     // Evaluate this predicate
     switch($this->predicateType)
     {
-      case PRED_AND:
+      case self::PRED_AND:
         return $left && $right;
         
-      case PRED_OR:
+      case self::PRED_OR:
         return $left || $right;
         
-      case PRED_XOR:
+      case self::PRED_XOR:
         return $left ^= $right;
         
-      case PRED_EQUAL:
+      case self::PRED_EQUAL:
         return $left == $right;
       
-      case PRED_IN:
+      case self::PRED_IN:
         return is_array($right) && 
           in_array($left, $right);
           
-      case PRED_LIKE:
+      case self::PRED_LIKE:
         return strpos($left, $right) !== false;
     }
   }
@@ -200,7 +200,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_AND;
+    $newPredicate->predicateType = self::PRED_AND;
     return $newPredicate;
   }
   
@@ -216,7 +216,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_OR;
+    $newPredicate->predicateType = self::PRED_OR;
     return $newPredicate;
   }
   
@@ -232,7 +232,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_XOR;
+    $newPredicate->predicateType = self::PRED_XOR;
     return $newPredicate;
   }
 
@@ -248,7 +248,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_EQUAL;
+    $newPredicate->predicateType = self::PRED_EQUAL;
     return $newPredicate;
   }
 
@@ -264,7 +264,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_IN;
+    $newPredicate->predicateType = self::PRED_IN;
     return $newPredicate;
   }
 
@@ -280,7 +280,7 @@ class Predicate
     $newPredicate = new Predicate($leftValue, $rightValue);
     
     // Set type
-    $newPredicate->predicateType = PRED_LIKE;
+    $newPredicate->predicateType = self::PRED_LIKE;
     return $newPredicate;
   }
 }
