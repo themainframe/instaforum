@@ -41,8 +41,8 @@ class DBTest extends PHPUnit_Framework_TestCase
    * @var A test row to insert
    */
   protected $testRow = array(
-    'col_a' => 98765432,
-    'col_b' => 4321,  
+    'col_a' => 12345678,
+    'col_b' => 1352956159,  
     'col_c' => true,
     'col_d' => 'Hello world!',
     'col_e' => 'Hello world in 64 bytes!',
@@ -65,7 +65,7 @@ class DBTest extends PHPUnit_Framework_TestCase
    */
   protected $testRowAppliedMask = array(
     'col_a' => 1234,
-    'col_b' => 1234567812345678,
+    'col_b' => 1352956159,
     'col_c' => false,
     'col_d' => 'Goodbye world.',
     'col_e' => 'Hello world in 64 bytes!',
@@ -264,13 +264,8 @@ class DBTest extends PHPUnit_Framework_TestCase
     // stdClass type?
     $this->assertInstanceOf('stdClass', $updatedRow);
     
-    
-    
     // Get array and validate contents
     $arrayUpdatedRow = (array)$updatedRow;
-    
-    var_dump($arrayUpdatedRow);
-    var_dump($this->testRowAppliedMask);
     
     $this->assertTrue($arrayUpdatedRow === $this->testRowAppliedMask);
   }
