@@ -42,7 +42,7 @@ class DBTest extends PHPUnit_Framework_TestCase
    */
   protected $testRow = array(
     'col_a' => 98765432,
-    'col_b' => 1352956159,  
+    'col_b' => 4321,  
     'col_c' => true,
     'col_d' => 'Hello world!',
     'col_e' => 'Hello world in 64 bytes!',
