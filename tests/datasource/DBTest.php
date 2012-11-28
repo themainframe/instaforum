@@ -204,16 +204,6 @@ class DBTest extends PHPUnit_Framework_TestCase
   }
   
   /**
-   * Verify blobs were written correctly.
-   * @todo Write this test.
-   * @depends testInsertRow
-   */
-  public function testBlobsWritten()
-  {
-    
-  }
-  
-  /**
    * Verify autos were written correctly.
    * @depends testInsertRow
    */
