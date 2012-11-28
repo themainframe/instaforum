@@ -9,4 +9,4 @@ php:
 before_script: chmod 777 .
 
 # Run all tests in the unit tests directory
-script: phpunit --colors --strict tests/
+script: phpunit --strict --colors tests/
