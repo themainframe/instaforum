@@ -37,9 +37,10 @@ class IF_Kernel
   public static $out = array();
 
   /** 
-   * Initialise the application kernel.
+   * Initialise the application kernel, bootstrapping the data store load
+   * process.
    *
-   * @return IF_Kernel
+   * @return boolean
    */
   public static function init()
   {
@@ -61,6 +62,7 @@ class IF_Kernel
     catch(Exception $exception)
     {
       self::error('blam');
+      return false;
     }
     
     // --------------------------------------------------
@@ -68,6 +70,8 @@ class IF_Kernel
     // --------------------------------------------------
     self::$in = self::getInput();
     
+    // All OK
+    return true;
   }
   
   /**
