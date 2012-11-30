@@ -34,6 +34,61 @@ var Forum = {
    */
   'cache' : {
 
+    /** 
+     * Setter
+     * Adds or updates a value in the cookie-cache.
+     */
+    'set' : function(name, value)
+    {
+      // Retrieve existing cookie, skipping the name
+      existing = document.cookie.substring(3);
+
+      // Empty?
+      if(existing == '')
+      {
+        existing_obj = {};
+      }
+      else
+      {
+        existing_obj = JSON.parse(existing);
+      }
+
+      // Set value
+      existing_obj[name] = value;
+
+      // Retrieve the cookie value
+      document.cookie = "IF=" + JSON.stringify(existing_obj);
+
+      return value;
+    },
+
+    /**
+     * Getter
+     * Gets a value from the cookie-cache.
+     * Returns undefined if it doesn't exist.
+     */
+    'get' : function(name)
+    {
+      // Retrieve existing cookie, skipping the name
+      existing = document.cookie.substring(3);
+
+      // Empty?
+      if(existing == '')
+      {
+        return undefined;
+      }
+
+      // Try to find the value
+      existing_obj = JSON.parse(existing);
+
+      if(existing_obj[name])
+      {
+        return existing_obj[name];
+      }
+
+      return undefined;
+    }
+
   },
 
   /**
