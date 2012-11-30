@@ -29,8 +29,15 @@ require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
 // Init DB
 IF_Kernel::init();
 
-// --------------------------------------------------
-// Get all forums
-// --------------------------------------------------
+print_r($_POST);
 
-print_r(IF_Kernel::$in);
+/*
+
+// Output a preset string (dev)
+print json_encode(
+
+  0 => array(
+
+  )
+
+);*/

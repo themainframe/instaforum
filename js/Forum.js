@@ -106,6 +106,11 @@ var IF = {
     'responder_path' : 'if/ajax/responder.php',
 
     /**
+     * The request ID.
+     */
+    'request_id' : 1,
+
+    /**
      * Enabled?
      */
     'enabled' : false,
@@ -137,9 +142,12 @@ var IF = {
         $.ajax(IF.remote.responder_path, {
           'data': IF.remote.queue,
           'dataType': 'json',
-          'contentType': 'application/json',
           'type': 'post',
-          'complete': function(data) {  }
+          'complete': function(data, data2) {
+
+            console.log(data);
+
+          }
         });
 
         // Clear queue
@@ -159,20 +167,26 @@ var IF = {
      * module:   The module that should handle the request on the server side.
      * method:   The method that should be invoked.
      * params:   Any parameters for the method.
+     * callback: The name of a callback function to run when the request finishes.
      * priority: The priority of the request.  Higher = sooner execution.
      * now:      Dispatch the whole stack instantly after adding this request.
      */
-    'add' : function(module, method, params, priority, now)
+    'add' : function(module, method, params, callback, priority, now)
     {
       // Add to the queue
       this.queue.push({
 
+        'nonce' : this.request_id,
         'module' : module,
         'method' : method,
         'params' : params,
+        'callback': callback,
         'priority' : priority
 
       });
+
+      // Increment request ID
+      this.request_id ++;
 
       // Clear the queue now?
       if(now)
