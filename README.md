@@ -5,3 +5,8 @@
 #### About the Project
 
 Instaforum is a dissertation project by [Damien Walsh](http://www.damow.net), a third year undergraduate studying Internet Computing at the University of Manchester School of Computer Science.
+
+
+#### Links
+
+* [Travis CI Build Logs](https://travis-ci.org/themainframe/instaforum "Travis CI Build Logs")
