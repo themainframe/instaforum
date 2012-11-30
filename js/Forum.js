@@ -9,23 +9,21 @@
 // Init the forum on load
 // --------------------------------------------------
 
-// "Smallest DOMready ever" - from http://dustindiaz.com/smallest-domready-ever
-function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-
 // Run when ready
-r(function() { Forum.init() });
-
+$(function() { IF.init(); });
 
 // --------------------------------------------------
-// The Forum object: provides interaction with IF.
+// The IF object: provides interaction with IF.
 // --------------------------------------------------
-var Forum = {
+var IF = {
 
   /**
-   * Values required by IF.
+   * Initialise the forum
    */
-  'vars' : {
-
+  'init' : function() 
+  {
+    // Start remote timer
+    this.remote.start();
   },
 
   /**
@@ -92,19 +90,98 @@ var Forum = {
   },
 
   /**
-   * Initialise the forum
+   * Remote object
+   * Handles interaction with IF on the webserver.
    */
-  'init' : function() 
-  {
-    // Retrieve vars from cache if possible
-    this.retrieve_cached_vars();
-  },
+  'remote' : {
 
-  /**
-   * Retrieve vars from the cache / cookies
-   */
-  'retrieve_cached_vars' : function()
-  {
+    /**
+     * The delay between requests in ms.
+     */
+    'wait' : 1000,
+
+    /**
+     * The path to the responder program.
+     */
+    'responder_path' : 'if/ajax/responder.php',
+
+    /**
+     * Enabled?
+     */
+    'enabled' : false,
+
+    /**
+     * Requests currently in the queue.
+     */
+    'queue' : [],
+
+    /**
+     * Start periodic communication.
+     */
+    'start' : function()
+    {
+      // Dispatch now
+      IF.remote.enabled = true;
+      this.dispatch();
+    },
+
+    /**
+     * Dispatch the queue now.
+     */
+    'dispatch' : function()
+    {
+      // Empty queue?
+      if(IF.remote.queue.length > 0)
+      {
+        // Dispatch requests
+        $.ajax(IF.remote.responder_path, {
+          'data': IF.remote.queue,
+          'dataType': 'json',
+          'contentType': 'application/json',
+          'type': 'post',
+          'complete': function(data) {  }
+        });
+
+        // Clear queue
+        IF.remote.queue = [];
+      }
+
+      // Rescheduling enabled?
+      if(IF.remote.enabled)
+      {
+        setTimeout(IF.remote.dispatch, IF.remote.wait);
+      }
+    },
+
+    /**
+     * Enqueue a request.
+     * 
+     * module:   The module that should handle the request on the server side.
+     * method:   The method that should be invoked.
+     * params:   Any parameters for the method.
+     * priority: The priority of the request.  Higher = sooner execution.
+     * now:      Dispatch the whole stack instantly after adding this request.
+     */
+    'add' : function(module, method, params, priority, now)
+    {
+      // Add to the queue
+      this.queue.push({
+
+        'module' : module,
+        'method' : method,
+        'params' : params,
+        'priority' : priority
+
+      });
+
+      // Clear the queue now?
+      if(now)
+      {
+        this.dispatch();
+      }
+
+      return true;
+    }
 
   }
 
