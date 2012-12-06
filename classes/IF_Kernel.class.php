@@ -19,22 +19,24 @@ class IF_Kernel
    *
    * @var DB
    */
-  public static $DB = null;
+  public $DB = null;
+
+  /**
+   * Modules.
+   * An associative array of modules loaded by the kernel.
+   * 
+   * N.B.  'module name' => module object
+   *
+   * @var array
+   */
+  public $modules = array();
 
   /**
    * Inputs.
    *
    * @var array
    */
-  public static $in = array();
-  
-  /**
-   * Output.
-   * Represents the `unwrapped` output, without the state information.
-   *
-   * @var array
-   */
-  public static $out = array();
+  public $in = array();
 
   /** 
    * Initialise the application kernel, bootstrapping the data store load
@@ -42,34 +44,77 @@ class IF_Kernel
    *
    * @return boolean
    */
-  public static function init()
+  public function init()
   {
     // --------------------------------------------------
-    // Include database classes
+    // Include classes
     // --------------------------------------------------
     require_once IF_ROOT_PATH . '/classes/datasource/DB.class.php';
     require_once IF_ROOT_PATH . '/classes/datasource/Files.class.php';
     require_once IF_ROOT_PATH . '/classes/datasource/Predicate.class.php';
     require_once IF_ROOT_PATH . '/classes/datasource/Result.class.php';
-    
+
+    /**
+     * @todo Implement autoloading
+     */
+
+    require_once IF_ROOT_PATH . '/classes/IF_Module.class.php';
+ 
     // --------------------------------------------------
     // Connect database
     // --------------------------------------------------
     try
     {
-      self::$DB = new DB(IF_ROOT_PATH . '/db/');
+      $this->DB = new DB(IF_ROOT_PATH . '/db/');
     }
     catch(Exception $exception)
     {
-      self::error('blam');
+      $this->error('blam');
       return false;
     }
     
     // --------------------------------------------------
     // Handle app input
     // --------------------------------------------------
-    self::$in = self::getInput();
-    
+    $this->in = $this->getInput();
+
+    // --------------------------------------------------
+    // Load modules
+    // --------------------------------------------------
+    $modulesDir = IF_ROOT_PATH . '/classes/modules/';
+
+    // List directory
+    $modulesDirHandle = opendir($modulesDir);
+
+    // Read files
+    while(false !== ($moduleFile = readdir($modulesDirHandle)))
+    {
+      // Skip . and ..
+      if($moduleFile == '.' || $moduleFile == '..')
+      {
+        continue;
+      }
+
+      // Load the file
+      @include $modulesDir . $moduleFile;
+
+      // Parse filename to module name
+      preg_match('/(IF_Module_([A-Za-z]+)).class.php/', $moduleFile,
+        $moduleNameMatches);
+
+      // Skip if module name looks invalid
+      if(count($moduleNameMatches) != 3)
+      {
+        continue;
+      }
+
+      $moduleName = $moduleNameMatches[2];
+      $moduleClassName = $moduleNameMatches[1];
+
+      // Create instance
+      $this->modules[$moduleName] = new $moduleClassName;
+    }
+
     // All OK
     return true;
   }
@@ -79,14 +124,14 @@ class IF_Kernel
    *
    * @return boolean
    */
-  private static function getInput()
+  private function getInput()
   {
     $inputs = array();
   
     foreach($_GET as $getKey => $getValue)
     {
       // Remove null bytes and path traversals
-      $getValue = self::removeNullBytes($getValue);
+      $getValue = $this->removeNullBytes($getValue);
       $inputs[$getKey] = str_replace('../', '&#46;&#46;/', $getValue);
     }
     
@@ -98,7 +143,7 @@ class IF_Kernel
    *
    * @return string
    */
-  private static function removeNullBytes($string)
+  private function removeNullBytes($string)
   {
     return preg_replace('/x00/', '', $string);  
   }
