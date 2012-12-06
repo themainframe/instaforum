@@ -1,7 +1,7 @@
 <?php
 /**
  * Board.class.php
- * Defines the Board module
+ * Defines the Board module class
  *   
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
@@ -13,7 +13,7 @@
  *
  * @package IF
  */
-class Board
+class IF_Module_Board extends IF_Module
 {
   /**
    * Get the title of the board.
@@ -22,6 +22,7 @@ class Board
    */
   public function getTitle()
   {
-    return 'The board title';
+    // Retrieve the title
+    return 'Test';
   }
 }
