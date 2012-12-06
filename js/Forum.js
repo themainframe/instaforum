@@ -140,12 +140,42 @@ var IF = {
       {
         // Dispatch requests
         $.ajax(IF.remote.responder_path, {
-          'data': IF.remote.queue,
+          'data': 'IF=' + JSON.stringify(IF.remote.queue),
           'dataType': 'json',
           'type': 'post',
-          'complete': function(data, data2) {
+          'success': function(data) {
 
-            console.log(data);
+            // For each response, invoke the callback
+            $.each(data, function(request_nonce, response) {
+              
+              // Is a callback specified?
+              if(response.callback)
+              {
+                // Execute callback function, which may be namespaced
+                var arguments = Array.prototype.slice.call(
+                  response.params ? response.params : Array());
+
+                // Base context is the window object
+                var context = window;
+
+                // Follow the namespace path
+                var namespaces = response.callback.split(".");
+                var funcPart = namespaces.pop();
+
+                for(var i = 0; i < namespaces.length; i++)
+                {
+                  // Update context
+                  context = context[namespaces[i]];
+                }
+
+                // Call function
+                if(context[funcPart])
+                {
+                  context[funcPart].apply(context, arguments);
+                }
+              }
+
+            });
 
           }
         });
