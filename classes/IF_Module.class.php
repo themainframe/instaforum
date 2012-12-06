@@ -18,5 +18,5 @@ abstract class IF_Module
    * 
    * @var *IF_Kernel
    */
-  protected $parent = null;
+  public $parent = null;
 }
