@@ -113,6 +113,9 @@ class IF_Kernel
 
       // Create instance
       $this->modules[$moduleName] = new $moduleClassName;
+
+      // Add reference to kernel class object
+      $this->modules[$moduleName]->parent = & $this;
     }
 
     // All OK

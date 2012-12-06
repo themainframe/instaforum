@@ -1,6 +1,6 @@
 <?php
 /**
- * Board.class.php
+ * IF_Module_Board.class.php
  * Defines the Board module class
  *   
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
@@ -23,6 +23,6 @@ class IF_Module_Board extends IF_Module
   public function getTitle()
   {
     // Retrieve the title
-    return 'Test';
+    return $this->parent->modules['Config']->get('board.title');
   }
 }
