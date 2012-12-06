@@ -15,7 +15,10 @@ require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
 // --------------------------------------------------
 // Initialise
 // --------------------------------------------------
-if(!IF_Kernel::init())
+
+$IF = new IF_Kernel();
+
+if(!$IF->init())
 {
   print '<strong>Problems encountered during kernel init.</strong>';
 }
