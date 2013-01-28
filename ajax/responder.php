@@ -51,7 +51,7 @@ foreach($JSON as $request)
     'module' => $request->module,
     'method' => $request->method,
     'params' => $request->params,
-    'callback' => $request->callback,
+    'callback' => (property_exists($request, 'callback') ? $request->callback : function() { }),
     'nonce' => intval($request->nonce)
   );
 }

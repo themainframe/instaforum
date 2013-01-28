@@ -38,12 +38,12 @@ class IF_Kernel
    */
   public $in = array();
 
-  /** 
-   * Initialise the application kernel, bootstrapping the data store load
-   * process.
-   *
-   * @return boolean
-   */
+    /** 
+     * Initialise the application kernel, bootstrapping the data store load
+     * process.
+     *
+     * @return boolean
+     */
   public function init()
   {
     // --------------------------------------------------

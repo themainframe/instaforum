@@ -6,6 +6,14 @@
  */
 
 // --------------------------------------------------
+// Patch prototypes
+// --------------------------------------------------
+
+String.prototype.uc_first = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+// --------------------------------------------------
 // Init the forum on load
 // --------------------------------------------------
 
@@ -24,6 +32,50 @@ var IF = {
   {
     // Start remote timer
     this.remote.start();
+
+    // Setup static values
+    this.modules.board.convert_static('title');
+
+    // Build the main body
+    this.modules.board.build();
+  },
+
+  /** 
+   * Modules
+   */
+  'modules': {
+
+    /**
+     * Board
+     * Represents the forum state
+     */
+    'board' : {
+
+      /** 
+       * Convert title.
+       */
+      'convert_static' : function(name) {
+        if(IF.cache.get('board.' + name) == undefined)
+        {
+          IF.remote.exec('Board', 'get' + name.uc_first(), {},
+            'IF.modules.board.got_static', 1);
+        }
+        else
+        {
+          this.got_static(IF.cache.get('board.' + name));
+        }
+      },
+
+      /** 
+       * Retrieved title.
+       */
+      'got_static' : function(value) {
+        IF.cache.set('board.title', value);
+        $('.IF-forum-title').text(value);
+      }
+
+    }
+
   },
 
   /**
@@ -39,10 +91,35 @@ var IF = {
     'set' : function(name, value)
     {
       // Retrieve existing cookie, skipping the name
+      tag = document.cookie.substring(0, 3);
       existing = document.cookie.substring(3);
 
+      // Split-off at the first non-quoted semicolon
+      escape = false;
+      quote = false;
+      for(c = 0; c < existing.length; c ++)
+      {
+        if(existing[c] == '\\' && !escape)
+        {
+          escape = true;
+          continue;
+        }
+
+        if(!escape && existing[c] == '"')
+        {
+          quote = !quote;
+        }
+
+        if(!quote && existing[c] == ';')
+        {
+          break;
+        }
+      }
+
+      existing = existing.substring(0, c);
+
       // Empty?
-      if(existing == '')
+      if(tag != 'IF=')
       {
         existing_obj = {};
       }
@@ -68,10 +145,35 @@ var IF = {
     'get' : function(name)
     {
       // Retrieve existing cookie, skipping the name
+      tag = document.cookie.substring(0, 3);
       existing = document.cookie.substring(3);
 
+      // Split-off at the first non-quoted semicolon
+      escape = false;
+      quote = false;
+      for(c = 0; c < existing.length; c ++)
+      {
+        if(existing[c] == '\\' && !escape)
+        {
+          escape = true;
+          continue;
+        }
+
+        if(!escape && existing[c] == '"')
+        {
+          quote = !quote;
+        }
+
+        if(!quote && existing[c] == ';')
+        {
+          break;
+        }
+      }
+
+      existing = existing.substring(0, c);
+
       // Empty?
-      if(existing == '')
+      if(tag != 'IF=')
       {
         return undefined;
       }
@@ -103,7 +205,7 @@ var IF = {
     /**
      * The path to the responder program.
      */
-    'responder_path' : 'if/ajax/responder.php',
+    'responder_path' : './if/ajax/responder.php',
 
     /**
      * The request ID.
@@ -119,6 +221,11 @@ var IF = {
      * Requests currently in the queue.
      */
     'queue' : [],
+
+    /**
+     * Temporary callbacks
+     */
+    'temp_callbacks' : {},
 
     /**
      * Start periodic communication.
@@ -173,6 +280,9 @@ var IF = {
                 {
                   context[funcPart].apply(context, arguments);
                 }
+
+                // Clean up temporary callbacks
+                delete context[funcPart];
               }
 
             });
@@ -199,10 +309,19 @@ var IF = {
      * params:   Any parameters for the method.
      * callback: The name of a callback function to run when the request finishes.
      * priority: The priority of the request.  Higher = sooner execution.
+     * cache:    Is the request cachable?
      * now:      Dispatch the whole stack instantly after adding this request.
      */
-    'add' : function(module, method, params, callback, priority, now)
+    'exec' : function(module, method, params, callback, priority, now)
     {
+      // Build temporary callback function
+      if(typeof callback == 'function')
+      {
+        cb_name = 'IF_cb_' + this.request_id;
+        this.temp_callbacks[cb_name] = callback;
+        callback = 'IF.remote.temp_callbacks.' + cb_name;
+      }
+
       // Add to the queue
       this.queue.push({
 
