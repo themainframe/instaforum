@@ -28,7 +28,7 @@ if(!defined('IF_IN_ACP'))
       <span class="logo"><?php print IF_APP_NAME; ?></span>
     </div>
     <div class="section">
-      <span class="title">Forum</span>
+      <span class="title">Board</span>
       <a href="?act=forums">Forums &amp; Subforums</a>
       <a href="?act=configuration">Configuration</a>
     </div>

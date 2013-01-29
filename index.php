@@ -57,6 +57,8 @@ if(!isset($_SESSION['admin_name']))
 $modules = array(
   'home' => array('home.acp.php', 'Home'),
   'login' => array('login.acp.php', 'Log In'),
+  
+  'forums' => array('forums.acp.php', 'Forums'),
   'configuration' => array('configuration.acp.php', 'Configuration')
 );
 

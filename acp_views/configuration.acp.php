@@ -1,4 +1,4 @@
-    <h1>Forum &raquo; Configuration</h1>
+    <h1>Board &raquo; Configuration</h1>
 
     <h2>Title, Keywords &amp; Description</h2>
 

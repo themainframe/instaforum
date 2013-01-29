@@ -176,3 +176,16 @@ textarea {
 input:focus, textarea:focus {
   border: 1px solid #000;
 }
+
+/*** Data */
+
+table {
+  width: 100%;
+  border-spacing: 0px;
+}
+
+table thead tr {
+  height: 40px;
+  background: #b3b3b3;
+  color: #fff;
+}
