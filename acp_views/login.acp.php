@@ -14,6 +14,20 @@ if(!defined('IF_IN_ACP'))
   exit();
 }
 
+// Login action?
+if(isset($_GET['mode']) && $_GET['mode'] == 'do')
+{
+  // Validate
+  /** 
+   * @todo Validation code
+   */
+
+  $_SESSION['admin_name'] = $_POST['username'];
+
+  // Go to dashboard
+  header('Location: ?act=home');
+}
+
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +49,7 @@ if(!defined('IF_IN_ACP'))
         <p class="description">Enter your username.</p>
       </div>
       <div class="value">
-        <input type="text" />
+        <input type="text" name="username" />
       </div>
     </div>
 
@@ -45,7 +59,7 @@ if(!defined('IF_IN_ACP'))
         <p class="description">Enter your password.</p>
       </div>
       <div class="value">
-        <input type="password" />
+        <input type="password" name="password" />
       </div>
     </div>
 

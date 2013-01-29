@@ -29,6 +29,9 @@ if(!$IF->init())
   print '<strong>Problems encountered during kernel init.</strong>';
 }
 
+// Start buffering
+ob_start();
+
 // ------------------------------------------------------
 // Affirm admin status
 // ------------------------------------------------------
@@ -54,8 +57,7 @@ if(!isset($_SESSION['admin_name']))
 $modules = array(
   'home' => array('home.acp.php', 'Home'),
   'login' => array('login.acp.php', 'Log In'),
-
-  'configuration' => array('configuration.acp.php', 'Configuration'),
+  'configuration' => array('configuration.acp.php', 'Configuration')
 );
 
 // Set title
@@ -68,7 +70,8 @@ if($headerFooterEnabled)
 }
 
 // Validate the file
-if(!file_exists(IF_ROOT_PATH . '/acp_views/' . $modules[$action][0]))
+if(!array_key_exists($action, $modules) ||
+  !file_exists(IF_ROOT_PATH . '/acp_views/' . $modules[$action][0]))
 {
   print '<h1>Module not found</h1>' . PHP_EOL;
   print '<p>Instaforum can\'t find the specified module.</p>' . PHP_EOL;
@@ -88,3 +91,6 @@ if($headerFooterEnabled)
 { 
   require IF_ROOT_PATH . '/acp_static/footer.acp.php';
 }
+
+// Finshed
+ob_end_flush();
