@@ -15,7 +15,7 @@ if(!defined('IF_IN_ACP'))
 ?><!DOCTYPE html>
 <html>
 <head>
-  <title><?php print isset($ACP_TITLE) ? $ACP_TITLE : 'Instaforum Admin'; ?></title>
+  <title><?php print IF_APP_NAME; ?> - <?php print isset($ACP_TITLE) ? $ACP_TITLE : 'Admin'; ?></title>
   <link rel="stylesheet" type="text/css" href="acp_static/style/default.css" />
   <link rel="stylesheet" type="text/css" href="js/external/jquery.min.js" />
   <link rel="stylesheet" type="text/css" href="acp_static/js/acp.js" />
@@ -24,7 +24,9 @@ if(!defined('IF_IN_ACP'))
 
   <!-- BEGIN: Sidebar -->
   <div class="sidebar">
-    <div class="logo"><?php print IF_APP_NAME; ?></div>
+    <div class="logo">
+      <span class="logo"><?php print IF_APP_NAME; ?></span>
+    </div>
     <div class="section">
       <span class="title">Forum</span>
       <a href="?act=forums">Forums &amp; Subforums</a>

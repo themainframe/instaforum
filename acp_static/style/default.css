@@ -9,6 +9,27 @@ body, html {
   font-size: 11pt;
 }
 
+/*** Login */
+div.login {
+  width: 440px;
+  height: 300px;
+  margin-top: -150px;
+  margin-left: -220px;
+  position: absolute;;
+  top: 50%;
+  left: 50%;
+}
+
+div.login div.banner {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  height: 100px;
+  line-height: 100px;
+  margin: 0px 0px 20px 0px;
+}
+
 /*** Sidebar */
 
 div.sidebar {
@@ -76,6 +97,40 @@ div.body h2 {
   height: 40px;
   padding-left: 20px;
   line-height: 40px;
+}
+
+/** Information classes */
+
+span.icon_info {
+  font-family: serif;
+  font-size: 22px;
+  margin: 0px 10px 0px 10px;
+  line-height: 22px;
+  vertical-align: middle;
+  font-weight: bold;
+  font-style: italic; 
+}
+
+div.information {
+  border: 2px solid #b3b3b3;
+  background: #d5d5d5;
+  padding: 10px;
+  clear: both;
+  margin: 0px 0px 15px 0px;
+}
+
+div.information p {
+  margin: 0px;
+}
+
+div.information.blue {
+  border: 2px solid #7cb5d0;
+  background: #cadff3;
+}
+
+div.information.red {
+  border: 2px solid #c51a1a;
+  background: #ffcfcf;
 }
 
 /** Fields */

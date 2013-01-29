@@ -33,32 +33,38 @@ if(!$IF->init())
 // Affirm admin status
 // ------------------------------------------------------
 
-/** 
- * @todo verify admin security level...
- */
+// Action key
+$action = isset($_GET['act']) ? $_GET['act'] : 'home';
 
-// ------------------------------------------------------
-// Load header - Output starts here!
-// ------------------------------------------------------
-require IF_ROOT_PATH . '/acp_static/header.acp.php';
+// Draw the header & footer?
+$headerFooterEnabled = true;
+
+if(!isset($_SESSION['admin_name']))
+{
+  // Not logged in
+  $action = 'login';
+  $headerFooterEnabled = false;
+}
 
 // ------------------------------------------------------
 // Load main module
 // ------------------------------------------------------
 
-// Action key
-$action = $_GET['act'];
-
 // Define the modules
 $modules = array(
   'home' => array('home.acp.php', 'Home'),
+  'login' => array('login.acp.php', 'Log In'),
+
   'configuration' => array('configuration.acp.php', 'Configuration'),
 );
 
-// Search for the appropriate module
-if(!array_key_exists($_GET['act'], $modules))
+// Set title
+$ACP_TITLE = $modules[$action][1];
+
+// Load header
+if($headerFooterEnabled)
 {
-  $action = 'home';
+  require IF_ROOT_PATH . '/acp_static/header.acp.php';
 }
 
 // Validate the file
@@ -68,12 +74,17 @@ if(!file_exists(IF_ROOT_PATH . '/acp_views/' . $modules[$action][0]))
   print '<p>Instaforum can\'t find the specified module.</p>' . PHP_EOL;
 }
 else
-{
+{  
   // Load the module
   require IF_ROOT_PATH . '/acp_views/' . $modules[$action][0];
 }
 
+
+
 // ------------------------------------------------------
 // Load footer
 // ------------------------------------------------------
-require IF_ROOT_PATH . '/acp_static/footer.acp.php';
+if($headerFooterEnabled)
+{ 
+  require IF_ROOT_PATH . '/acp_static/footer.acp.php';
+}
