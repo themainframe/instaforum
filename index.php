@@ -11,6 +11,7 @@
 // ------------------------------------------------------
 require_once 'init.php';
 require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
+require_once IF_ROOT_PATH . '/classes/IF_Dataview.class.php';
 
 // ------------------------------------------------------
 // Security

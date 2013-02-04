@@ -189,3 +189,26 @@ table thead tr {
   background: #b3b3b3;
   color: #fff;
 }
+
+table thead tr td {
+  padding-left: 15px;
+}
+
+table thead tr td a {
+  text-decoration: none;
+  color: #fff;
+}
+
+table tbody tr td {
+  height: 40px;
+  padding-left: 15px;
+}
+
+table tbody tr td a.button {
+  margin: 0px 7px 0px 7px;
+  text-decoration: none;
+}
+
+table tbody tr td a.button.red {
+  color: #f00;
+}
