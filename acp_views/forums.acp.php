@@ -43,10 +43,14 @@
       $result = $IF->DB->select('if_forums');
       foreach($result->rows as $row)
       {
+        // Count topics and posts
+        $topics = $IF->DB->select('if_topics',
+          Predicate::_equal(new Value('topic_forum_id'), $row['forum_id']));
+
         $data->addRow(array(
           $row['forum_id'],
           $row['forum_title'],
-          0,
+          $topics->count,
           0,
           '<a class="button" href="#">Edit</a>' . 
             '<a class="button red" href="#">Delete</a>'
