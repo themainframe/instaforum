@@ -85,7 +85,7 @@ if(!array_key_exists($action, $modules) ||
   !file_exists(IF_ROOT_PATH . '/acp_views/' . $modules[$action][0]))
 {
   print '<h1>Module not found</h1>' . PHP_EOL;
-  print '<p>Instaforum can\'t find the specified module.</p>' . PHP_EOL;
+  print '<p>' . IF_APP_NAME . ' can\'t find the specified module.</p>' . PHP_EOL;
 }
 else
 {  
