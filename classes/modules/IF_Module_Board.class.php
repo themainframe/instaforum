@@ -106,6 +106,14 @@ class IF_Module_Board extends IF_Module
       );
     }
 
-    return $rows;
+    // Get the topic information too
+    $topic = $this->parent->DB->select('if_topics',
+      Predicate::_equal(new Value('topic_id'), $ID));
+    
+    return array(
+      'posts' => $rows,
+      'topic_id' => $ID,
+      'topic_name' => $topic->rows[0]['topic_title']
+    );
   }
 }

@@ -10,7 +10,7 @@
 //  Application product name & version
 // ------------------------------------------------------
 define('IF_APP_NAME', 'instaforum');
-define('IF_APP_VERSION', 0.1);
+define('IF_APP_VERSION', 0.2);
 
 // ------------------------------------------------------
 //  Application root path.

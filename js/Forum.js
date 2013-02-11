@@ -134,8 +134,8 @@ var IF = {
                              .attr('href', '#')
                              .click(IF.modules.board.build);
 
-        $(forumArea).append($('<br />'))
-                    .append(backLink);
+        $(forumArea).append($('<br />'));
+        //            .append(backLink);
       },
 
       /**
@@ -173,12 +173,12 @@ var IF = {
         console.log(posts);
 
         // Hide the forum listing
-        $('.IF-body').html('');
+        $('.IF-body').html('<h3>' + posts.topic_name + '</h3>');
 
         // Show all posts for the topic
         topicArea = $('<div />').addClass('IF-topic');
 
-        $.each(posts, function(i, o) {
+        $.each(posts.posts, function(i, o) {
 
           // Generate the link
           post = $('<div />').html(o.post_text)
@@ -188,6 +188,10 @@ var IF = {
           $('<div />').html(post)
                      .appendTo(topicArea);
         });
+
+
+        $('<textarea />').addClass('IF-input-post')
+                         .appendTo(topicArea);
 
         $(topicArea).appendTo('.IF-body');
       },
