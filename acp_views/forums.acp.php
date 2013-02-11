@@ -1,7 +1,16 @@
     <h1>Board &raquo; Forums</h1>
 
     <p>This section of the Admin Panel allows you to control the
-    discussion forums that are available on the board.</p>
+    discussion forums that are available on the board.
+
+      <br />
+
+      <form action="?act=forum_new" method="post">
+        To create a new forum, type a name <input name="name" type="text" /> and click 
+        <input type="submit" value="Create" />.
+      </form>
+
+    </p>
 
     <?php
 
@@ -53,7 +62,8 @@
           $topics->count,
           0,
           '<a class="button" href="#">Edit</a>' . 
-            '<a class="button red" href="#">Delete</a>'
+            '<a class="button red" href="?act=forum_delete&id=' . 
+            $row['forum_id'] . '">Delete</a>'
         ));
       }
 

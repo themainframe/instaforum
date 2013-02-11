@@ -47,6 +47,7 @@ if(!defined('IF_IN_ACP'))
       <a href="#">Storage</a>
       <a href="#">Plugins</a>
       <a href="#">About</a>
+      <a href="?act=logout">Log Out</a>
     </div>
   </div>
   <!-- END: Sidebar -->

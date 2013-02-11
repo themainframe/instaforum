@@ -2,6 +2,22 @@
 
     <h2>Title, Keywords &amp; Description</h2>
 
+
+<?php
+
+  // Get all config
+  $result = $IF->DB->select('if_config');
+  $config = array();
+
+  while($row = $result->next())
+  {
+    $config[$row->config_key] = $row->config_value;
+  }
+
+?>
+
+  <form action="?act=configuration_save" method="post">
+
     <div class="field">
       <div class="info">
         <span class="title">Board title</span>
@@ -10,7 +26,7 @@
         </p>
       </div>
       <div class="value">
-        <input type="text" />
+        <input type="text" name="board.title" value="<?php print $config['board_title']; ?>" />
       </div>
     </div>
 
@@ -22,51 +38,16 @@
         </p>
       </div>
       <div class="value">
-        <textarea></textarea>
+        <textarea name="board.description"><?php print $config['board_description']; ?></textarea>
       </div>
     </div>
 
     <div class="field">
       <div class="info">
-        <span class="title">Board description</span>
-        <p class="description">
-          A brief description of the board.
-        </p>
       </div>
       <div class="value">
-        <textarea></textarea>
+        <input type="submit" value="Save Changes" />
       </div>
     </div>
-    <div class="field">
-      <div class="info">
-        <span class="title">Board description</span>
-        <p class="description">
-          A brief description of the board.
-        </p>
-      </div>
-      <div class="value">
-        <textarea></textarea>
-      </div>
-    </div>
-    <div class="field">
-      <div class="info">
-        <span class="title">Board description</span>
-        <p class="description">
-          A brief description of the board.
-        </p>
-      </div>
-      <div class="value">
-        <textarea></textarea>
-      </div>
-    </div>
-    <div class="field">
-      <div class="info">
-        <span class="title">Board description</span>
-        <p class="description">
-          A brief description of the board.
-        </p>
-      </div>
-      <div class="value">
-        <textarea></textarea>
-      </div>
-    </div>
+
+  </form>

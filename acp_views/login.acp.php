@@ -18,14 +18,27 @@ if(!defined('IF_IN_ACP'))
 if(isset($_GET['mode']) && $_GET['mode'] == 'do')
 {
   // Validate
-  /** 
-   * @todo Validation code
-   */
+  $result = $IF->DB->select('if_admins', 
+    Predicate::_and(
+      Predicate::_equal(new Value('admin_name'), $_POST['username']),
+      Predicate::_equal(new Value('admin_password'), md5($_POST['password']))
+    )
+  );
 
-  $_SESSION['admin_name'] = $_POST['username'];
+  $message = '';
+  
+  if($result->count == 1)
+  {
+    $_SESSION['admin_name'] = $_POST['username'];
 
-  // Go to dashboard
-  header('Location: ?act=home');
+    // Go to dashboard
+    header('Location: ?act=home');
+  }
+  else
+  {
+    $message = 'Invalid credentials.';
+  }
+
 }
 
 ?><!DOCTYPE html>
@@ -65,7 +78,7 @@ if(isset($_GET['mode']) && $_GET['mode'] == 'do')
 
     <div class="field">
       <div class="info">
-        &nbsp;
+        <strong style="color: #f00"><?php print $message; ?></strong>
       </div>
       <div class="value">
         <input type="submit" value="Log In" />
