@@ -1,0 +1,33 @@
+/**
+ * instaforum-bw
+ * Instaforum stylesheet.
+ * 
+ * A black & white default theme.
+ */
+
+/*** Board Index ***/
+.IF-body .IF-board a.IF-forum-link {
+  font-size: 120%;
+  text-decoration: none;
+  color: #000;
+  line-height: 160%;
+}
+.IF-body .IF-board a:hover {
+  text-decoration: underline;
+}
+.IF-body .IF-board .grey {
+  color: #afafaf;
+}
+
+/*** Topics ***/
+.IF-body .IF-forum a.IF-topic-link {
+  font-size: 120%;
+  text-decoration: none;
+  color: #000;
+  line-height: 160%;
+}
+.IF-body .IF-forum a:hover {
+  text-decoration: underline;
+}
+
+/*** Posts ***/

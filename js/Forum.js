@@ -30,14 +30,14 @@ var IF = {
    */
   'init' : function() 
   {
-    // Start remote timer
-    this.remote.start();
-
     // Setup static values
     this.modules.board.convert_static('title');
 
-    // Build the main body
+    // Build the forum
     this.modules.board.build();
+
+    // Start remote timer
+    this.remote.start();
   },
 
   /** 
@@ -51,8 +51,97 @@ var IF = {
      */
     'board' : {
 
+      /**
+       * Build the main forum body.
+       */
+      'build' : function() {
+
+        // Retrieve forums
+        IF.remote.exec('Board', 'getForums', {},
+          'IF.modules.board.got_forums', 1);
+      },
+
+      /**
+       * The forums have been retrieved
+       */
+      'got_forums' : function(forums) {
+
+        // Clear the body
+        $('.IF-body').text('');
+        boardArea = $('<div />').addClass('IF-board');
+
+        $.each(forums, function(i, o) {
+
+          // Generate the link
+          link = $('<a />').html('&#9654; ' + o.forum_title)
+                           .attr('href', '#f-' + o.forum_id)
+                           .attr('class', 'IF-forum-link')
+                           .attr('id', o.forum_id)
+                           .click(IF.modules.board.display_forum);
+
+          posts = $('<em />').html(' - ' + o.forum_topics + ' topics')
+                             .addClass('grey');
+
+          $('<div />').append(link).append(posts).append('<br />')
+                      .appendTo(boardArea);
+        });
+
+        $(boardArea).appendTo('.IF-body');
+      },
+
+      /**
+       * Display the specified forum.
+       */
+      'display_forum' : function() {
+
+        // Retrieve the forum contents
+        IF.remote.exec('Board', 'getTopics', {'id' : $(this).attr('id')},
+          'IF.modules.board.got_topics', 1);
+
+      },
+
+      /**
+       * The topics have been retrieved.
+       */
+      'got_topics' : function(topics) {
+
+        console.log(topics);
+
+        // Hide the forum listing
+        $('.IF-board').hide();
+
+        // Show all topics
+        forumArea = $('<div />').addClass('IF-forum');
+
+        $.each(topics, function(i, o) {
+
+          // Generate the link
+          link = $('<a />').html(o.topic_title)
+                           .attr('href', '#')
+                           .attr('class', 'IF-topic-link')
+                           .attr('id', o.topic_id)
+                           .click(IF.modules.board.display_topic);
+
+          $('<div />').html(link)
+                     .appendTo(forumArea);
+        });
+
+        $(forumArea).appendTo('.IF-body');
+      },
+
+      /**
+       * Display the specified topic.
+       */
+      'display_topic' : function() {
+
+        // Retrieve the forum contents
+        IF.remote.exec('Board', 'getPosts', {'id' : $(this).attr('id')},
+          'IF.modules.board.got_posts', 1);
+
+      },
+
       /** 
-       * Convert title.
+       * Convert static elements by requesting them from the server/cache.
        */
       'convert_static' : function(name) {
         if(IF.cache.get('board.' + name) == undefined)
@@ -62,16 +151,46 @@ var IF = {
         }
         else
         {
-          this.got_static(IF.cache.get('board.' + name));
+          this.got_static(
+            {'attribute' : name, 'value' : IF.cache.get('board.' + name)});
         }
       },
 
-      /** 
-       * Retrieved title.
+
+      /**
+       * The posts have been retrieved.
        */
-      'got_static' : function(value) {
-        IF.cache.set('board.title', value);
-        $('.IF-forum-title').text(value);
+      'got_posts' : function(posts) {
+
+        console.log(posts);
+
+        // Hide the forum listing
+        $('.IF-forum').hide();
+
+        // Show all posts for the topic
+        topicArea = $('<div />').addClass('IF-topic');
+
+        $.each(posts, function(i, o) {
+
+          // Generate the link
+          post = $('<div />').html(o.post_text)
+                             .attr('class', 'IF-post')
+                             .attr('id', o.post_id);
+
+          $('<div />').html(post)
+                     .appendTo(topicArea);
+        });
+
+        $(topicArea).appendTo('.IF-body');
+      },
+
+      /** 
+       * Retrieved a static element.
+       * result is a hash that contains attribute and value.
+       */
+      'got_static' : function(result) {
+        IF.cache.set('board.' + result.attribute, result.value);
+        $('.IF-' + result.attribute).text(result.value);
       }
 
     }
@@ -278,7 +397,7 @@ var IF = {
                 // Call function
                 if(context[funcPart])
                 {
-                  context[funcPart].apply(context, arguments);
+                  context[funcPart].call(context, response.params);
                 }
 
                 // Clean up temporary callbacks
@@ -311,8 +430,9 @@ var IF = {
      * priority: The priority of the request.  Higher = sooner execution.
      * cache:    Is the request cachable?
      * now:      Dispatch the whole stack instantly after adding this request.
+     * adparam:  An aditional optional parameter to pass to the callback method.
      */
-    'exec' : function(module, method, params, callback, priority, now)
+    'exec' : function(module, method, params, callback, priority, now, adparam)
     {
       // Build temporary callback function
       if(typeof callback == 'function')
@@ -330,7 +450,8 @@ var IF = {
         'method' : method,
         'params' : params,
         'callback': callback,
-        'priority' : priority
+        'priority' : priority,
+        'adparam' : adparam
 
       });
 
