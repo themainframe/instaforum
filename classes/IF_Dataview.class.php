@@ -268,7 +268,7 @@ class IF_Dataview
       $cID = 0;
       foreach($this->columns as $key => $column)
       {
-        $html .= '      <td "' . $this->getCSSString($column['cell_css']) . 
+        $html .= '      <td style="' . $this->getCSSString($column['cell_css']) . 
           '">' . PHP_EOL;
 
         if($column['checkbox'])
