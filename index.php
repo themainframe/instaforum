@@ -58,9 +58,14 @@ if(!isset($_SESSION['admin_name']))
 $modules = array(
   'home' => array('home.acp.php', 'Home'),
   'login' => array('login.acp.php', 'Log In'),
+  'logout' => array('logout.acp.php', 'Log Out'),
   
   'forums' => array('forums.acp.php', 'Forums'),
-  'configuration' => array('configuration.acp.php', 'Configuration')
+  'forum_delete' => array('forum_delete.acp.php', 'Forums - Deleted'),
+  'forum_new' => array('forum_new.acp.php', 'Forums - Create'),
+
+  'configuration' => array('configuration.acp.php', 'Configuration'),
+  'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved')
 );
 
 // Set title

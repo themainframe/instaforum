@@ -25,7 +25,7 @@ class IF_Module_Board extends IF_Module
     // Retrieve the title
     return array(
       'attribute' => 'title', 
-      'value' => $this->parent->modules['Config']->get('board.title')
+      'value' => $this->parent->modules['Config']->get('board_title')
       );
   }
 
@@ -42,7 +42,7 @@ class IF_Module_Board extends IF_Module
     // Count topics and posts
     foreach($result->rows as $row)
     {
-      // Count topics and posts
+      // Count topics
       $topics = $this->parent->DB->select('if_topics',
         Predicate::_equal(new Value('topic_forum_id'), $row['forum_id']));
 
@@ -70,10 +70,14 @@ class IF_Module_Board extends IF_Module
 
     foreach($topics->rows as $row)
     {
-      // Count topics and posts
+      // Count posts
+      $posts = $this->parent->DB->select('if_posts',
+        Predicate::_equal(new Value('post_topic_id'), $row['topic_id']));
+
       $rows[] = array(
         'topic_id' => $row['topic_id'],
-        'topic_title' => $row['topic_title']
+        'topic_title' => $row['topic_title'],
+        'topic_posts' => $posts->count
       );
     }
 

@@ -58,7 +58,7 @@ var IF = {
 
         // Retrieve forums
         IF.remote.exec('Board', 'getForums', {},
-          'IF.modules.board.got_forums', 1);
+          'IF.modules.board.got_forums');
       },
 
       /**
@@ -67,7 +67,8 @@ var IF = {
       'got_forums' : function(forums) {
 
         // Clear the body
-        $('.IF-body').text('');
+        $('.IF-body').html('');
+
         boardArea = $('<div />').addClass('IF-board');
 
         $.each(forums, function(i, o) {
@@ -108,7 +109,7 @@ var IF = {
         console.log(topics);
 
         // Hide the forum listing
-        $('.IF-board').hide();
+        $('.IF-body').html('');
 
         // Show all topics
         forumArea = $('<div />').addClass('IF-forum');
@@ -116,7 +117,7 @@ var IF = {
         $.each(topics, function(i, o) {
 
           // Generate the link
-          link = $('<a />').html(o.topic_title)
+          link = $('<a />').html('&#9654; ' + o.topic_title)
                            .attr('href', '#')
                            .attr('class', 'IF-topic-link')
                            .attr('id', o.topic_id)
@@ -127,6 +128,14 @@ var IF = {
         });
 
         $(forumArea).appendTo('.IF-body');
+
+        // Append the back link
+        backLink = $('<a />').html('&#9664; Back')
+                             .attr('href', '#')
+                             .click(IF.modules.board.build);
+
+        $(forumArea).append($('<br />'))
+                    .append(backLink);
       },
 
       /**
@@ -137,7 +146,6 @@ var IF = {
         // Retrieve the forum contents
         IF.remote.exec('Board', 'getPosts', {'id' : $(this).attr('id')},
           'IF.modules.board.got_posts', 1);
-
       },
 
       /** 
@@ -165,7 +173,7 @@ var IF = {
         console.log(posts);
 
         // Hide the forum listing
-        $('.IF-forum').hide();
+        $('.IF-body').html('');
 
         // Show all posts for the topic
         topicArea = $('<div />').addClass('IF-topic');
@@ -370,6 +378,8 @@ var IF = {
           'dataType': 'json',
           'type': 'post',
           'success': function(data) {
+
+            console.log(data);
 
             // For each response, invoke the callback
             $.each(data, function(request_nonce, response) {

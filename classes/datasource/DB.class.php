@@ -519,6 +519,7 @@ class DB
    */
   private function linkBlob($tableName, $blobData)
   {
+
     // Path to the blobs directory for the table
     $blobsPath = $this->dataPath . '/' . $tableName . '.table/blobs/';
 
@@ -538,6 +539,7 @@ class DB
     // Write data into the blobfile
     file_put_contents($blobsPath . $fName, $blobData);
 
+    print "For $tableName - linked $blobData to $fName <br />";
     return $fName;
   }
  

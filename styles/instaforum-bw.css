@@ -21,13 +21,19 @@
 
 /*** Topics ***/
 .IF-body .IF-forum a.IF-topic-link {
-  font-size: 120%;
+  font-size: 110%;
   text-decoration: none;
   color: #000;
-  line-height: 160%;
+  line-height: 140%;
 }
 .IF-body .IF-forum a:hover {
   text-decoration: underline;
 }
 
 /*** Posts ***/
+
+.IF-body .IF-post {
+  border: 2px solid #000;
+  padding: 10px;
+  width: 90%;
+}
