@@ -538,8 +538,7 @@ class DB
 
     // Write data into the blobfile
     file_put_contents($blobsPath . $fName, $blobData);
-
-    print "For $tableName - linked $blobData to $fName <br />";
+    
     return $fName;
   }
  
