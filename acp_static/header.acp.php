@@ -34,19 +34,18 @@ if(!defined('IF_IN_ACP'))
     </div>
     <div class="section">
       <span class="title">Users &amp; Permissions</span>
-      <a href="#">Users</a>
-      <a href="#">Groups</a>
+      <a href="?act=users">Users</a>
+      <a href="?act=groups">Groups</a>
     </div>
     <div class="section">
       <span class="title">Integration</span>
-      <a href="#">Hooks</a>
-      <a href="#">Style Editor</a>
+      <a href="?act=hooks">Hooks</a>
+      <a href="?act=style">Style Editor</a>
     </div>
     <div class="section">
       <span class="title">System</span>
-      <a href="#">Storage</a>
-      <a href="#">Plugins</a>
-      <a href="#">About</a>
+      <a href="?act=db">Storage</a>
+      <a href="?act=about">About</a>
       <a href="?act=logout">Log Out</a>
     </div>
   </div>

@@ -65,7 +65,10 @@ $modules = array(
   'forum_new' => array('forum_new.acp.php', 'Forums - Create'),
 
   'configuration' => array('configuration.acp.php', 'Configuration'),
-  'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved')
+  'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved'),
+
+
+  'about' => array('about.acp.php', 'About')
 );
 
 // Set title
