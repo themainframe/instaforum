@@ -17,15 +17,11 @@
       $data = new IF_Dataview();
 
       $data->addColumns(array(
-        'id' => array(
-          'name' => 'ID',
-          'checkbox' => true,
-          'css' => array(
-            'width' => '40px'
-          )
-        ),
         'name' => array(
-          'name' => 'Name'
+          'name' => 'Name',
+          'cell_css' => array(
+            'font-weight' => 'bold'
+          )
         ),
         'topics_count' => array(
           'name' => 'Topics',
@@ -57,7 +53,6 @@
           Predicate::_equal(new Value('topic_forum_id'), $row['forum_id']));
 
         $data->addRow(array(
-          $row['forum_id'],
           $row['forum_title'],
           $topics->count,
           0,
