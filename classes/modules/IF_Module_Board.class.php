@@ -113,7 +113,8 @@ class IF_Module_Board extends IF_Module
     return array(
       'posts' => $rows,
       'topic_id' => $ID,
-      'topic_name' => $topic->rows[0]['topic_name']
+      'topic_name' => $topic->rows[0]['topic_name'],
+      'forum_id' => $topic->rows[0]['topic_forum_id']
     );
   }
 }

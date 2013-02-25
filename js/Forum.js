@@ -194,6 +194,15 @@ var IF = {
                          .appendTo(topicArea);
 
         $(topicArea).appendTo('.IF-body');
+
+        // Append the back link
+        backLink = $('<a />').html('&#9664; Back')
+                             .attr('href', '#')
+                             .attr('id', posts.forum_id)
+                             .click(IF.modules.board.display_forum);
+
+        $(topicArea).append($('<br />'))
+                    .append(backLink);
       },
 
       /** 
@@ -407,7 +416,7 @@ var IF = {
                   // Update context
                   context = context[namespaces[i]];
                 }
-                
+
                 // Call function
                 if(context[funcPart])
                 {
