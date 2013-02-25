@@ -56,7 +56,8 @@
           $row['forum_title'],
           $topics->count,
           0,
-          '<a class="button" href="#">Edit</a>' . 
+          '<a class="button" href="./?act=forum_edit&id=' . 
+            $row['forum_id'] . '">Edit</a>' . 
             '<a class="button red" href="?act=forum_delete&id=' . 
             $row['forum_id'] . '">Delete</a>'
         ));

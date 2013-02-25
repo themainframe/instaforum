@@ -63,10 +63,11 @@ $modules = array(
   'forums' => array('forums.acp.php', 'Forums'),
   'forum_delete' => array('forum_delete.acp.php', 'Forums - Deleted'),
   'forum_new' => array('forum_new.acp.php', 'Forums - Create'),
+  'forum_edit' => array('forum_edit.acp.php', 'Forums - Edit'),
+  'forum_edit_save' => array('forum_edit_save.acp.php', 'Forums - Edit'),
 
   'configuration' => array('configuration.acp.php', 'Configuration'),
   'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved'),
-
 
   'about' => array('about.acp.php', 'About')
 );

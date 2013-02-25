@@ -1,18 +1,17 @@
 <?php
 
   // Save all changes
-  $IF->DB->delete('if_forums',
+  $forum = $IF->DB->update('if_forums', array(
+      'forum_title' => $_POST['title']
+    ),
     Predicate::_equal(new Value('forum_id'), $_GET['id']));
-
-  /**
-   * @todo Remove the topics & posts from the forums
-   */
 
 ?>
 
+
     <h1>Board &raquo; Forums</h1>
     <p>
-      The forum has been deleted.
+      The forum has been saved.
     </p>
 
     <script type="text/javascript">
