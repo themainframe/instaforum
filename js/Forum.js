@@ -134,8 +134,8 @@ var IF = {
                              .attr('href', '#')
                              .click(IF.modules.board.build);
 
-        $(forumArea).append($('<br />'));
-        //            .append(backLink);
+        $(forumArea).append($('<br />'))
+                    .append(backLink);
       },
 
       /**
@@ -377,7 +377,7 @@ var IF = {
       if(IF.remote.queue.length > 0)
       {
         // Dispatch requests
-        $.ajax(IF.remote.responder_path, {
+        $.ajax(IF.remote.responder_path + '?rand=' + Math.floor(Math.random(0,99999) * 1000), {
           'data': 'IF=' + JSON.stringify(IF.remote.queue),
           'dataType': 'json',
           'type': 'post',
@@ -407,15 +407,12 @@ var IF = {
                   // Update context
                   context = context[namespaces[i]];
                 }
-
+                
                 // Call function
                 if(context[funcPart])
                 {
                   context[funcPart].call(context, response.params);
                 }
-
-                // Clean up temporary callbacks
-                delete context[funcPart];
               }
 
             });
