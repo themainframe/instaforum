@@ -336,7 +336,7 @@ var IF = {
     /**
      * The path to the responder program.
      */
-    'responder_path' : './if/ajax/responder.php',
+    'responder_path' : './instaforum/ajax/responder.php',
 
     /**
      * The request ID.

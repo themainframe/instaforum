@@ -57,7 +57,7 @@ class IF_Module_Board extends IF_Module
   }
 
   /** 
-   * Get the topics for a specified forum.
+   * Get the topics for a speciifed forum.
    *
    * @param integer $ID The ID of the forum to get the topics for.
    * @return array
@@ -76,7 +76,7 @@ class IF_Module_Board extends IF_Module
 
       $rows[] = array(
         'topic_id' => $row['topic_id'],
-        'topic_title' => $row['topic_title'],
+        'topic_title' => $row['topic_name'],
         'topic_posts' => $posts->count
       );
     }
@@ -113,7 +113,7 @@ class IF_Module_Board extends IF_Module
     return array(
       'posts' => $rows,
       'topic_id' => $ID,
-      'topic_name' => $topic->rows[0]['topic_title']
+      'topic_name' => $topic->rows[0]['topic_name']
     );
   }
 }
