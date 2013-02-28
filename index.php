@@ -56,25 +56,27 @@ if(!isset($_SESSION['admin_name']))
 
 // Define the modules
 $modules = array(
-  'home' => array('home.acp.php', 'Home'),
-  'login' => array('login.acp.php', 'Log In'),
-  'logout' => array('logout.acp.php', 'Log Out'),
+  'home' => array('acp/home.acp.php', 'Home'),
+  'login' => array('acp/login.acp.php', 'Log In'),
+  'logout' => array('acp/logout.acp.php', 'Log Out'),
   
-  'forums' => array('forums.acp.php', 'Forums'),
-  'forum_delete' => array('forum_delete.acp.php', 'Forums - Deleted'),
-  'forum_new' => array('forum_new.acp.php', 'Forums - Create'),
-  'forum_edit' => array('forum_edit.acp.php', 'Forums - Edit'),
-  'forum_edit_save' => array('forum_edit_save.acp.php', 'Forums - Edit'),
+  'forums' => array('forums/forums.acp.php', 'Forums'),
+  'forum_delete' => array('forums/forum_delete.acp.php', 'Forums - Deleted'),
+  'forum_new' => array('forums/forum_new.acp.php', 'Forums - Create'),
+  'forum_edit' => array('forums/forum_edit.acp.php', 'Forums - Edit'),
+  'forum_edit_save' => array('forums/forum_edit_save.acp.php', 'Forums - Edit'),
 
-  'users' => array('users.acp.php', 'Users'),
-  'user_edit' => array('user_edit.acp.php', 'Users - Edit'),
-  'user_edit_save' => array('user_edit_save.acp.php', 'Users - Edit'),
-  'user_delete' => array('user_delete.acp.php', 'Users - Deleted'),
+  'users' => array('users/users.acp.php', 'Users'),
+  'user_edit' => array('users/user_edit.acp.php', 'Users - Edit'),
+  'user_edit_save' => array('users/user_edit_save.acp.php', 'Users - Edit'),
+  'user_delete' => array('users/user_delete.acp.php', 'Users - Deleted'),
 
-  'configuration' => array('configuration.acp.php', 'Configuration'),
-  'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved'),
+  'groups' => array('users/groups.acp.php', 'Groups'),
 
-  'about' => array('about.acp.php', 'About')
+  'configuration' => array('configuration/configuration.acp.php', 'Configuration'),
+  'configuration_save' => array('configuration/configuration_save.acp.php', 'Configuration - Saved'),
+
+  'about' => array('acp/about.acp.php', 'About')
 );
 
 // Set title
