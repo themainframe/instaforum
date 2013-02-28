@@ -66,6 +66,11 @@ $modules = array(
   'forum_edit' => array('forum_edit.acp.php', 'Forums - Edit'),
   'forum_edit_save' => array('forum_edit_save.acp.php', 'Forums - Edit'),
 
+  'users' => array('users.acp.php', 'Users'),
+  'user_edit' => array('user_edit.acp.php', 'Users - Edit'),
+  'user_edit_save' => array('user_edit_save.acp.php', 'Users - Edit'),
+  'user_delete' => array('user_delete.acp.php', 'Users - Deleted'),
+
   'configuration' => array('configuration.acp.php', 'Configuration'),
   'configuration_save' => array('configuration_save.acp.php', 'Configuration - Saved'),
 
