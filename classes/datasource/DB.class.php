@@ -653,6 +653,20 @@ class DB
         }
         
         $row[$columnName] = self::unpackSegment($segment);
+
+        // Blob resolution required?
+        if($column['type'] == 'blob')
+        {
+          $blobResolveStartTime = microtime(true);
+          
+          // Resolve the blob
+          $row[$columnName] = self::resolveBlob($tableName,
+            $row[$columnName]);
+          
+          $blobResolveEndTime = microtime(true);
+          $result->addProfileTime('ResolvingBlobs', 
+            $blobResolveEndTime - $blobResolveStartTime);
+        }
       }
       
       // Check the row against the predicate if present
