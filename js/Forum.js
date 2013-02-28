@@ -112,7 +112,8 @@ var IF = {
         $('.IF-body').html('');
 
         // Show all topics
-        forumArea = $('<div />').addClass('IF-forum');
+        forumArea = $('<div />').addClass('IF-forum')
+                                .attr('id', topics.forum_id);
 
         $.each(topics, function(i, o) {
 
@@ -127,6 +128,7 @@ var IF = {
                      .appendTo(forumArea);
         });
 
+        $(forumArea).append($('<br />'));
         $(forumArea).appendTo('.IF-body');
 
         // Append the back link
@@ -141,10 +143,11 @@ var IF = {
       /**
        * Display the specified topic.
        */
-      'display_topic' : function() {
-
+      'display_topic' : function(topicID) {
+      
         // Retrieve the forum contents
-        IF.remote.exec('Board', 'getPosts', {'id' : $(this).attr('id')},
+        IF.remote.exec('Board', 'getPosts',
+          {'id' : $(this).attr('id')},
           'IF.modules.board.got_posts', 1);
       },
 
@@ -170,13 +173,12 @@ var IF = {
        */
       'got_posts' : function(posts) {
 
-        console.log(posts);
-
         // Hide the forum listing
         $('.IF-body').html('<h3>' + posts.topic_name + '</h3>');
 
         // Show all posts for the topic
-        topicArea = $('<div />').addClass('IF-topic');
+        topicArea = $('<div />').addClass('IF-topic')
+                                .attr('id', posts.topic_id);
 
         $.each(posts.posts, function(i, o) {
 
@@ -191,7 +193,35 @@ var IF = {
 
 
         $('<textarea />').addClass('IF-input-post')
-                         .appendTo(topicArea);
+                         .appendTo(topicArea)
+                         .keypress(function(e) {
+
+          if(e.which == 13)
+          {
+            // Grab the text
+            text = $(this).val().trim();
+            $(this).val('');
+
+            // Submit
+            IF.remote.exec('Board', 'addPost', 
+              {
+                'id': $('div.IF-topic:first').attr('id'),
+                'text': text
+              },
+              function() 
+              {
+                // Re-get the list of posts
+                IF.remote.exec('Board', 'getPosts',
+                {'id' : $('div.IF-topic:first').attr('id') },
+                'IF.modules.board.got_posts', 1);
+              }, 1
+            );
+
+            // Stop the insertion of linebreaks
+            return false;
+          }
+
+        });
 
         $(topicArea).appendTo('.IF-body');
 

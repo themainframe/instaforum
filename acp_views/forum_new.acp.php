@@ -4,14 +4,7 @@
   $IF->DB->insert('if_forums', array(
     'forum_title' => $_POST['name']
   ));
-    
-  foreach($_POST as $key => $value)
-  {
-    $IF->DB->insert('if_config', array(
-      'config_key' => $key,
-      'config_value' => $value
-    ));
-  }
+
 
 ?>
 

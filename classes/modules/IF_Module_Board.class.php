@@ -77,7 +77,8 @@ class IF_Module_Board extends IF_Module
       $rows[] = array(
         'topic_id' => $row['topic_id'],
         'topic_title' => $row['topic_name'],
-        'topic_posts' => $posts->count
+        'topic_posts' => $posts->count,
+        'forum_id' => $ID
       );
     }
 
@@ -116,5 +117,23 @@ class IF_Module_Board extends IF_Module
       'topic_name' => $topic->rows[0]['topic_name'],
       'forum_id' => $topic->rows[0]['topic_forum_id']
     );
+  }
+
+  /** 
+   * Add a post to the specified topic
+   *
+   * @param integer $ID The ID of the topic to add a post to.
+   * @param string $text The text to add.
+   * @return array
+   */
+  public function addPost($ID, $text)
+  {
+    // Insert a post
+    $this->parent->DB->insert('if_posts', array(
+      'post_topic_id' => $ID,
+      'post_text' => strip_tags($text)
+    ));
+
+    return array($ID);
   }
 }
