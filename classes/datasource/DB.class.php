@@ -472,6 +472,9 @@ class DB
   
         // Overwrite column value
         $values[$columnName] = $value;
+
+        // Add auto increment values
+        $result->autos[$columnName] = $value;
       }
       
       // Int type?

@@ -33,6 +33,14 @@ class Result
    * @var array
    */
   public $rows = array();
+
+  /**
+   * Any auto-generated IDs that were produced by the query.
+   * N.B.  Represented as an associative array of column name => ID
+   * 
+   * @var array
+   */
+  public $autos = array();
   
   /**
    * The index of the current row.
