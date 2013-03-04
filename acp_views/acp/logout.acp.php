@@ -24,5 +24,6 @@ unset($_SESSION['admin_name']);
     <p>You will be redirected shortly.</p>
 
     <script type="text/javascript">
-        setTimeout(function() { window.location = '?'; }, 3000);
+        setTimeout(function() { window.location = '?'; }, 
+          <?php print $IF::$CONFIG['acp_save_delay']; ?>);
     </script>

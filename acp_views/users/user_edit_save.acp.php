@@ -16,5 +16,6 @@
     </p>
 
     <script type="text/javascript">
-      setTimeout(function() { window.location = '?act=users'; }, 3000);
+      setTimeout(function() { window.location = '?act=users'; },
+        <?php print $IF::$CONFIG['acp_save_delay']; ?>);
     </script>

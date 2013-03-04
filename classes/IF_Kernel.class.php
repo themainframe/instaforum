@@ -54,6 +54,20 @@ class IF_Kernel
     'delete_t' => 'Delete Others Topics',
   );
 
+  /**
+   * Configuration values.
+   * Contains general non-critical configuration tweaks.
+   * 
+   * @var array
+   */
+  public static $CONFIG = array(
+
+    // The amount of time to wait before returning to list contexts
+    // within the admin panel.
+    'acp_save_delay' => 1000
+
+  );
+
   /** 
    * Initialise the application kernel, bootstrapping the data store load
    * process.
