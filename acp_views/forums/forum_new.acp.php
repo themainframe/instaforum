@@ -27,5 +27,6 @@ $IF->DB->insert('if_forums', array(
     </p>
 
     <script type="text/javascript">
-      setTimeout(function() { window.location = '?act=forums'; }, 3000);
+      setTimeout(function() { window.location = '?act=forums'; },
+        <?php print $IF::$CONFIG['acp_save_delay']; ?>);
     </script>
