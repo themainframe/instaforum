@@ -20,29 +20,21 @@
           'name' => 'Options',
           'sortable' => false,
           'css' => array(
-            'width' => '100px'
+            'width' => '190px'
           )
         ),
       ));
 
       // Get the rows
-      $result = $IF->DB->select('if_users');
+      $result = $IF->DB->select('if_groups');
       foreach($result->rows as $row)
       {
-        // Count topics and posts
-        $topics = $IF->DB->select('if_topics',
-          Predicate::_equal(new Value('topic_owner_id'), $row['user_id']));
-
-        // Count posts
-        $posts = $IF->DB->select('if_posts',
-          Predicate::_equal(new Value('post_owner_id'), $row['user_id']));
-
         $data->addRow(array(
-          $row['user_name'],
+          $row['group_name'],
           '<a class="button" href="./?act=group_edit&id=' . 
-            $row['user_id'] . '">Edit</a>' . 
+            $row['group_id'] . '">Edit Permissions</a>' . 
             '<a class="button red" href="?act=group_delete&id=' . 
-            $row['user_id'] . '">Delete</a>'
+            $row['group_id'] . '">Delete</a>'
         ));
       }
 

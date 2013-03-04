@@ -71,7 +71,9 @@ $modules = array(
   'user_edit_save' => array('users/user_edit_save.acp.php', 'Users - Edit'),
   'user_delete' => array('users/user_delete.acp.php', 'Users - Deleted'),
 
-  'groups' => array('users/groups.acp.php', 'Groups'),
+  'groups' => array('groups/groups.acp.php', 'Groups'),
+  'group_edit' => array('groups/group_edit.acp.php', 'Groups - Edit'),
+  'group_edit_save' => array('groups/group_edit_save.acp.php', 'Groups - Edit'),
 
   'configuration' => array('configuration/configuration.acp.php', 'Configuration'),
   'configuration_save' => array('configuration/configuration_save.acp.php', 'Configuration - Saved'),

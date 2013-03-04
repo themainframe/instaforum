@@ -38,12 +38,28 @@ class IF_Kernel
    */
   public $in = array();
 
-    /** 
-     * Initialise the application kernel, bootstrapping the data store load
-     * process.
-     *
-     * @return boolean
-     */
+  /**
+   * Permission masks.
+   * 
+   * @var array
+   */
+  public static $permissions = array(
+    'read' => 'Read',
+    'post' => 'Reply',
+    'new_topic' => 'New Topic',
+    'sticky_topic' => 'Sticky Topics',
+    'delete_own_p' => 'Delete Own Posts',
+    'delete_own_t' => 'Delete Own Topics',
+    'delete_p' => 'Delete Others Posts',
+    'delete_t' => 'Delete Others Topics',
+  );
+
+  /** 
+   * Initialise the application kernel, bootstrapping the data store load
+   * process.
+   *
+   * @return boolean
+   */
   public function init()
   {
     // --------------------------------------------------
