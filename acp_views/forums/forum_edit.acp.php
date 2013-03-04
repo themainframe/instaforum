@@ -1,17 +1,31 @@
 <?php
+/**
+ * forum_edit.acp.php
+ * ACP View: Forums: Edit
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $forum = $IF->DB->select('if_forums',
-    Predicate::_equal(new Value('forum_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
-  if($forum->count != 1)
-  {
-    // Not found
-    header('Location: ./?act=forums');
-  }
+// Save all changes
+$forum = $IF->DB->select('if_forums',
+  Predicate::_equal(new Value('forum_id'), $_GET['id']));
 
-  // Reassign to the actual forum object
-  $forum = $forum->next();
+if($forum->count != 1)
+{
+  // Not found
+  header('Location: ./?act=forums');
+}
+
+// Reassign to the actual forum object
+$forum = $forum->next();
 
 ?>
 

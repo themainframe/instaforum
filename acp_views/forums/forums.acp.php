@@ -1,3 +1,21 @@
+<?php
+/**
+ * forums.acp.php
+ * ACP View: Forums
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
+
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+?>
+
     <h1>Board &raquo; Forums</h1>
 
     <p>This section of the Admin Panel allows you to control the

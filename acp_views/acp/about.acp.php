@@ -1,3 +1,20 @@
+<?php
+/**
+ * about.acp.php
+ * ACP View: About
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
+
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+?>
     <h1>System &raquo; About</h1>
     <p>
       

@@ -1,7 +1,7 @@
 <?php
 /**
- * login.acp.php
- * ACP View: Login Form
+ * logout.acp.php
+ * ACP View: Log Out
  *
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */

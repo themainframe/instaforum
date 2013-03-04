@@ -1,12 +1,26 @@
 <?php
+/**
+ * forum_delete.acp.php
+ * ACP View: Forums: Delete
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $IF->DB->delete('if_forums',
-    Predicate::_equal(new Value('forum_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
-  /**
-   * @todo Remove the topics & posts from the forums
-   */
+// Save all changes
+$IF->DB->delete('if_forums',
+  Predicate::_equal(new Value('forum_id'), $_GET['id']));
+
+/**
+ * @todo Remove the topics & posts from the forums
+ */
 
 ?>
 

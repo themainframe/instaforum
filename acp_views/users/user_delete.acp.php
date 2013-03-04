@@ -1,12 +1,26 @@
 <?php
+/**
+ * user_delete.acp.php
+ * ACP View: Users: Delete
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $IF->DB->delete('if_users',
-    Predicate::_equal(new Value('user_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
-  /**
-   * @todo Remove the topics & posts from the forums
-   */
+// Save all changes
+$IF->DB->delete('if_users',
+  Predicate::_equal(new Value('user_id'), $_GET['id']));
+
+/**
+ * @todo Remove the topics & posts owned by them
+ */
 
 ?>
 

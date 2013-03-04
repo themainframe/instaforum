@@ -1,3 +1,21 @@
+<?php
+/**
+ * groups.acp.php
+ * ACP View: Groups
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
+
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+?>
+
     <h1>Users &amp; Permissions &raquo; Groups</h1>
 
     <p>This section of the Admin Panel allows you to manipulate

@@ -1,3 +1,21 @@
+<?php
+/**
+ * configuration.acp.php
+ * ACP View: Configuration Edit
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
+
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+?>
+
     <h1>Board &raquo; Configuration</h1>
 
     <h2>Title, Keywords &amp; Description</h2>

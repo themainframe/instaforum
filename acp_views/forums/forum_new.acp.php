@@ -1,10 +1,23 @@
 <?php
+/**
+ * forum_new.acp.php
+ * ACP View: Forums: New Forum
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $IF->DB->insert('if_forums', array(
-    'forum_title' => $_POST['name']
-  ));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
+// Save all changes
+$IF->DB->insert('if_forums', array(
+  'forum_title' => $_POST['name']
+));
 
 ?>
 

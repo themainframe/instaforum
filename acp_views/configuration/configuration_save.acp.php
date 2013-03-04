@@ -1,15 +1,29 @@
 <?php
+/**
+ * configuration_save.acp.php
+ * ACP View: Configuration Edit: Save
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $IF->DB->delete('if_config');
-    
-  foreach($_POST as $key => $value)
-  {
-    $IF->DB->insert('if_config', array(
-      'config_key' => $key,
-      'config_value' => $value
-    ));
-  }
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+// Save all changes
+$IF->DB->delete('if_config');
+  
+foreach($_POST as $key => $value)
+{
+  $IF->DB->insert('if_config', array(
+    'config_key' => $key,
+    'config_value' => $value
+  ));
+}
 
 ?>
 

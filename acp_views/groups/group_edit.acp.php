@@ -1,17 +1,31 @@
 <?php
+/**
+ * group_edit.acp.php
+ * ACP View: Groups: Edit
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $group = $IF->DB->select('if_groups',
-    Predicate::_equal(new Value('group_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
-  if($group->count != 1)
-  {
-    // Not found
-    header('Location: ./?act=groups');
-  }
+// Save all changes
+$group = $IF->DB->select('if_groups',
+  Predicate::_equal(new Value('group_id'), $_GET['id']));
 
-  // Reassign to the actual forum object
-  $group = $group->next();
+if($group->count != 1)
+{
+  // Not found
+  header('Location: ./?act=groups');
+}
+
+// Reassign to the actual forum object
+$group = $group->next();
 
 ?>
 

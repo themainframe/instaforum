@@ -1,11 +1,25 @@
 <?php
+/**
+ * user_edit_save.acp.php
+ * ACP View: Users: Save Changes
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $forum = $IF->DB->update('if_users', array(
-      'user_full_name' => $_POST['full_name'],
-      'user_email' => $_POST['email']
-    ),
-    Predicate::_equal(new Value('user_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
+
+// Save all changes
+$forum = $IF->DB->update('if_users', array(
+    'user_full_name' => $_POST['full_name'],
+    'user_email' => $_POST['email']
+  ),
+  Predicate::_equal(new Value('user_id'), $_GET['id']));
 
 ?>
 

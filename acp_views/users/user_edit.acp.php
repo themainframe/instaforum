@@ -1,17 +1,31 @@
 <?php
+/**
+ * user_edit.acp.php
+ * ACP View: Users: Edit
+ *
+ * @author Damien Walsh <walshd0@cs.man.ac.uk>
+ */
 
-  // Save all changes
-  $user = $IF->DB->select('if_users',
-    Predicate::_equal(new Value('user_id'), $_GET['id']));
+// ------------------------------------------------------
+// Security check
+// ------------------------------------------------------
+if(!defined('IF_IN_ACP'))
+{
+  exit();
+}
 
-  if($user->count != 1)
-  {
-    // Not found
-    header('Location: ./?act=users');
-  }
+// Save all changes
+$user = $IF->DB->select('if_users',
+  Predicate::_equal(new Value('user_id'), $_GET['id']));
 
-  // Reassign to the actual forum object
-  $user = $user->next();
+if($user->count != 1)
+{
+  // Not found
+  header('Location: ./?act=users');
+}
+
+// Reassign to the actual forum object
+$user = $user->next();
 
 ?>
 
