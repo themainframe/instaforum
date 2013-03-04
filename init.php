@@ -19,6 +19,11 @@ define('IF_APP_VERSION', 0.2);
 define('IF_ROOT_PATH', dirname(__FILE__));
 
 // ------------------------------------------------------
+// Application security parameters.
+// ------------------------------------------------------
+define('IF_PW_SALT', '');
+
+// ------------------------------------------------------
 //  Application's AJAX responder path.
 // ------------------------------------------------------
 define('IF_AJAX_PATH', IF_ROOT_PATH . '/ajax' );
