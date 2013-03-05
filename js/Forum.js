@@ -33,8 +33,24 @@ var IF = {
     // Setup static values
     this.modules.board.convert_static('title');
 
+    // Set up hint behaviour
+    $('.IF-hint').live('focus', function() {
+      if($(this).val() == $(this).attr('hint'))
+      {  
+        $(this).val('')
+               .css('color', '#000');
+      }
+    }).live('blur', function() {
+      if($(this).val() == '')
+      {
+        $(this).val($(this).attr('hint'))
+               .css('color', '#afafaf');
+      }
+    });
+
     // Build the forum
-    this.modules.board.build();
+    this.modules.board.init();
+    this.modules.user.init();
 
     // Start remote timer
     this.remote.start();
@@ -50,6 +66,25 @@ var IF = {
      * Represents the forum state
      */
     'board' : {
+
+      /**
+       * The current forum context
+       */
+      'forum_id' : -1,
+
+      /**
+       * The current topic context
+       */
+      'topic_id' : -1,
+
+      /**
+       * First-time init
+       */
+      'init' : function() {
+
+        // Retrieve forums
+        this.build();
+      },
 
       /**
        * Build the main forum body.
@@ -95,6 +130,9 @@ var IF = {
        */
       'display_forum' : function() {
 
+        // Set forum context
+        IF.modules.board.forum_id = $(this).attr('id');
+
         // Retrieve the forum contents
         IF.remote.exec('Board', 'getTopics', {'id' : $(this).attr('id')},
           'IF.modules.board.got_topics', 1);
@@ -106,16 +144,17 @@ var IF = {
        */
       'got_topics' : function(topics) {
 
-        console.log(topics);
-
         // Hide the forum listing
         $('.IF-body').html('');
+
+        // Set forum context
+        IF.modules.board.forum_id = topics.forum_id;
 
         // Show all topics
         forumArea = $('<div />').addClass('IF-forum')
                                 .attr('id', topics.forum_id);
 
-        $.each(topics, function(i, o) {
+        $.each(topics.topics, function(i, o) {
 
           // Generate the link
           link = $('<a />').html('&#9654; ' + o.topic_title)
@@ -136,8 +175,58 @@ var IF = {
                              .attr('href', '#')
                              .click(IF.modules.board.build);
 
+        // Append the new topic link (if permissions allow)
+        newLink = $('<a />').html('New Topic...')
+                            .attr('href', '#')
+                            .attr('id', topics.forum_id)
+                            .css('margin-right', '20px')
+                            .click(IF.modules.board.new_topic);
+
         $(forumArea).append($('<br />'))
+                    .append(newLink)
                     .append(backLink);
+      },
+
+      /**
+       * Display the "Create a new topic" form.
+       */
+      'new_topic' : function() {
+
+        // Hide the forum listing
+        $('.IF-body').html('');
+
+        // Add a text box for the user to type a title
+        $('<input />').addClass('IF-input IF-hint')
+                      .attr('id', 'IF-newtopic-title')
+                      .val('Type a title for the topic...')
+                      .attr('hint', 'Type a title for the topic...')
+                      .appendTo('.IF-body');
+
+        // Add a box for the user to type a post
+        $('<textarea />').addClass('IF-input-post')
+                         .appendTo('.IF-body')
+                         .attr('id', 'IF-newtopic-text')
+                         .keypress(function(e) {
+
+          if(e.which == 13)
+          {
+            // Submit
+            IF.remote.exec('Board', 'addTopic', 
+              {
+                'id': IF.modules.board.forum_id,
+                'name': $('#IF-newtopic-title').val(),
+                'text': $('#IF-newtopic-text').val()
+              },
+              function(ret) 
+              {
+                // Re-get the list of posts
+              }, 1
+            );
+
+            // Stop the insertion of linebreaks
+            return false;
+          }
+        });
       },
 
       /**
@@ -244,6 +333,163 @@ var IF = {
         $('.IF-' + result.attribute).text(result.value);
       }
 
+    },
+
+    /**
+     * User
+     * Represents the user state.
+     */
+    'user' : {
+
+      /**
+       * My user ID
+       */
+      'user_id' : -1,
+
+      /**
+       * My user name
+       */
+      'user_name' : '',
+
+      /**
+       * My full name
+       */
+      'user_full_name' : '',
+
+      /**
+       * Initialise the user model.
+       */
+      'init' : function() {
+
+        // Unpack values from the cache
+        IF.modules.user.user_id = IF.cache.get('user_id');
+        IF.modules.user.user_name = IF.cache.get('user_name');
+        IF.modules.user.user_full_name = IF.cache.get('user_full_name');
+
+        // Build the UI
+        this.build();
+
+      },
+
+      /**
+       * Build the user block if one exists.
+       */
+      'build' : function() {
+
+        userArea = $('.IF-user:first').html('');
+
+        // Found a user area?
+        if($(userArea).length == 0)
+        {
+          console.log('Not rendering a user area.');
+          return false;
+        }
+
+        // Logged in?
+        if(this.user_id == -1)
+        {
+          // Render a login form
+          username = $('<input />').addClass('IF-input IF-hint')
+                      .val('Username')
+                      .attr('id', 'IF-username-field')
+                      .attr('hint', 'Username');
+
+          password = $('<input />').addClass('IF-input IF-hint')
+                      .val('Password')
+                      .attr('type', 'password')
+                      .attr('id', 'IF-password-field')
+                      .attr('hint', 'Password')
+                      .keypress(function(e) {
+
+                        if(e.which == 13)
+                        {
+                          // Perform the login
+                          IF.modules.user.do_login($('#IF-username-field').val(),
+                            $('#IF-password-field').val());
+                        }
+
+                      });
+
+          // Append it all
+          $(userArea).append('<span id="IF-user-desc">Please log in to post:</span>')
+                     .append('<br /><br />')
+                     .append(username)
+                     .append(password)
+                     .append($('<br />'))
+                     .append($('<br />'));
+        }
+        else
+        {
+          // Render information about the user and a logout button
+          link = $('<a />').html('Log out')
+                           .attr('href', '#')
+                           .click(IF.modules.user.do_logout);
+
+          // Append
+          $(userArea).append('<span style="margin-right: 30px;">Logged in as ' + 
+                             this.user_full_name + '</span>')
+                     .append(link)
+                     .append('<br /><br />');
+        }
+
+      },
+
+      'do_login' : function(username, password) {
+
+        // Perform the login
+        IF.remote.exec('User', 'login', 
+          {
+            'username': username,
+            'password': password
+          },
+          function(res) 
+          {
+            if(res.user_id)
+            { 
+              // Set cache values
+              IF.cache.set('user_id', res.user_id);
+              IF.cache.set('user_name', res.user_name);
+              IF.cache.set('user_full_name', res.user_full_name);
+
+              // Set local values
+              IF.modules.user.user_id = res.user_id;
+              IF.modules.user.user_name = res.user_name;
+              IF.modules.user.user_full_name = res.user_full_name;
+
+              // Rebuild UI
+              IF.modules.user.build();
+              IF.modules.board.build();
+            }
+            else
+            {
+              // There was an error
+              $('#IF-user-desc').html('Invalid credentials.');
+            }
+          }, 1
+        );
+
+      },
+
+      'do_logout' : function() {
+
+        // Perform the logout
+        IF.remote.exec('User', 'logout', {}, function() { }, 1);
+
+        // Clear details in cache
+        IF.cache.set('user_id', -1);
+        IF.cache.set('user_name', '');
+        IF.cache.set('user_full_name', '');
+
+        // Clear local values
+        IF.modules.user.user_id = -1;
+        IF.modules.user.user_name = '';
+        IF.modules.user.user_full_name = '';
+
+        // Rebuild UI
+        IF.modules.user.build();
+
+      }
+
     }
 
   },
@@ -263,6 +509,7 @@ var IF = {
       // Retrieve existing cookie, skipping the name
       tag = document.cookie.substring(0, 3);
       existing = document.cookie.substring(3);
+      console.log('CACHE: Setting ' + name + ' to ' + value);
 
       // Split-off at the first non-quoted semicolon
       escape = false;
@@ -421,8 +668,6 @@ var IF = {
           'dataType': 'json',
           'type': 'post',
           'success': function(data) {
-
-            console.log(data);
 
             // For each response, invoke the callback
             $.each(data, function(request_nonce, response) {

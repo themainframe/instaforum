@@ -82,7 +82,10 @@ class IF_Module_Board extends IF_Module
       );
     }
 
-    return $rows;
+    return array(
+      'topics' => $rows,
+      'forum_id' => $ID
+    );
   }
 
   /** 
@@ -135,5 +138,32 @@ class IF_Module_Board extends IF_Module
     ));
 
     return array($ID);
+  }
+
+  /** 
+   * Add a topic to the specified forum
+   *
+   * @param integer $ID The ID of the forum to add a topic to.
+   * @param string $name The name of the topic.
+   * @param string $text The text to add.
+   * @return array
+   */
+  public function addTopic($ID, $name, $text)
+  {
+ /*   if(!$this->parent->modules['User']->ICan('new_topic', $ID))
+    {
+      // No permission!
+      return false;
+    }
+
+    // Insert a topic
+    $this->parent->DB->insert('if_topics', array(
+      'topic_id' => NULL,
+      'topic_name' => $name,
+      'topic_forum_id' => $ID,
+      'topic_owner_id' => $_SESSION['user_id']
+    ));
+*/
+    return 'Test';
   }
 }

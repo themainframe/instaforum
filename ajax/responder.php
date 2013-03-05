@@ -29,6 +29,9 @@ require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
 $IF = new IF_Kernel();
 $IF->init();
 
+// Start the session
+session_start();
+
 // --------------------------------------------------
 // Obtain JSON
 // --------------------------------------------------
@@ -66,6 +69,8 @@ $responses = array();
 // For each request in this queue...
 foreach($requests as $request)
 {
+  // Set the session ID
+
   // Safeify the name and build a filename
   $module = ucfirst(str_replace('.', '', $request['module']));
 
