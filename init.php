@@ -27,3 +27,8 @@ define('IF_PW_SALT', '');
 //  Application's AJAX responder path.
 // ------------------------------------------------------
 define('IF_AJAX_PATH', IF_ROOT_PATH . '/ajax' );
+
+// ------------------------------------------------------
+// Application database path
+// ------------------------------------------------------
+define('IF_DB_PATH', 'db/');
