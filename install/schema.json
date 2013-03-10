@@ -50,7 +50,7 @@
     },
 
     "rows": [
-      {"forum_id": 1, "forum_title": "Your first forum"}
+      {"forum_id": null, "forum_title": "Your first forum"}
     ]
   },
 
@@ -129,11 +129,15 @@
       },
       "post_forum_id": {
         "type": "int"
+      },
+      "post_owner_id": {
+        "type": "int"
       }
     },
 
     "rows": [
-      {"post_id": null, "post_text": "This is a sample post.", "post_topic_id": 1, "post_forum_id": 1}
+      {"post_id": null, "post_text": "This is a sample post.", "post_topic_id": 1, "post_forum_id": 1,
+       "post_owner_id": 1}
     ]
   },
 
