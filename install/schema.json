@@ -1,0 +1,43 @@
+{
+
+
+  "if_admins": {
+    "columns": {
+      "admin_id": {
+        "type": "int",
+        "auto": true
+      },
+      "admin_name": {
+        "type": "str32"
+      },
+      "admin_password": {
+        "type": "str32"
+      }
+    },
+
+    "rows": []
+  },
+
+
+  "if_config": {
+    "columns": {
+      "config_id": {
+        "type": "int",
+        "auto": true
+      },
+      "config_key": {
+        "type": "str32"
+      },
+      "config_value": {
+        "type": "blob"
+      }
+    },
+
+    "rows": [
+      [1, "board_title", "A Forum"],
+      [2, "board_description", "A description of a forum"]
+    ]
+  },
+
+
+}
