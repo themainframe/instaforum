@@ -163,7 +163,8 @@
     },
 
     "rows": [
-      {"topic_id": null, "topic_name": "A sample topic", "topic_forum_id": 1, "topic_owner_id": 1}
+      {"topic_id": null, "topic_name": "A sample topic", "topic_forum_id": 1, "topic_owner_id": 1,
+       "topic_is_sticky": true}
     ]
   },
 
