@@ -72,9 +72,10 @@ class IF_Kernel
    * Initialise the application kernel, bootstrapping the data store load
    * process.
    *
+   * @param string $dbPath Optionally an alternative database path to IF_DB_PATH.
    * @return boolean
    */
-  public function init()
+  public function init($dbPath = '')
   {
     // --------------------------------------------------
     // Include classes
@@ -95,11 +96,12 @@ class IF_Kernel
     // --------------------------------------------------
     try
     {
-      $this->DB = new DB(IF_ROOT_PATH . '/db/');
+      $this->DB = new DB(IF_ROOT_PATH . '/' . ($dbPath ? $dbPath : IF_DB_PATH));
     }
     catch(Exception $exception)
     {
-      $this->error('blam');
+      print 'There was a problem opening the database: ' . 
+        IF_ROOT_PATH . '/' . ($dbPath ? $dbPath : IF_DB_PATH) . PHP_EOL;
       return false;
     }
     

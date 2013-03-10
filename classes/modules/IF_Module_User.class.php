@@ -51,4 +51,41 @@ class IF_Module_user extends IF_Module
 
     return $user;
   }
+
+  /**
+   * Check if the current user can perform the specified action in the
+   * specified forum.
+   * 
+   * @param string $permissionString The permission string to check.
+   * @param integer $forumID The forum ID.
+   * @return boolean
+   */
+  public function can($permissionString, $forumID)
+  {
+    // Get the group I am in.
+    $userQuery = $this->parent->DB->select('if_users',
+      Predicate::_equal(new Value('user_id'), $_SESSION['user_id']));
+
+    if($userQuery->count == 0)
+    {
+      // I don't exist, therefore can't do anything
+      return false;
+    }
+
+    // Get the user (me)
+    $user = $userQuery->next();
+
+    // Get permissions for my group and the specified forum
+    $results = $this->parent->DB->select('if_permissions',
+      Predicate::_and(
+        Predicate::_equal(new Value('permission_group_id'), $user->user_group_id),
+        Predicate::_equal(new Value('permission_forum_id'), $forumID)
+      )
+    );
+
+    // Find the relevant permissions mask field
+    $fields = (array)$row->next();
+
+    return $fields['permission_' . $permissionString];
+  }
 }

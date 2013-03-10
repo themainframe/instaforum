@@ -46,11 +46,15 @@ class IF_Module_Board extends IF_Module
       $topics = $this->parent->DB->select('if_topics',
         Predicate::_equal(new Value('topic_forum_id'), $row['forum_id']));
 
+      // Count posts
+      $posts = $this->parent->DB->select('if_posts',
+        Predicate::_equal(new Value('post_forum_id'), $row['forum_id']));
+
       $rows[] = array(
         'forum_id' => $row['forum_id'],
         'forum_title' => $row['forum_title'],
         'forum_topics' => $topics->count,
-        'forum_posts' => 0
+        'forum_posts' => $posts->count
       );
     }
     return $rows;
@@ -150,7 +154,7 @@ class IF_Module_Board extends IF_Module
    */
   public function addTopic($ID, $name, $text)
   {
- /*   if(!$this->parent->modules['User']->ICan('new_topic', $ID))
+    if(!$this->parent->modules['User']->can('new_topic', $ID))
     {
       // No permission!
       return false;
@@ -163,7 +167,7 @@ class IF_Module_Board extends IF_Module
       'topic_forum_id' => $ID,
       'topic_owner_id' => $_SESSION['user_id']
     ));
-*/
+
     return 'Test';
   }
 }
