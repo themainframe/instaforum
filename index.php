@@ -88,6 +88,8 @@ $modules = array(
   'group_edit' => array('groups/group_edit.acp.php', 'Groups - Edit'),
   'group_edit_save' => array('groups/group_edit_save.acp.php', 'Groups - Edit'),
 
+  'hooks' => array('hooks/hooks.acp.php', 'Hooks'),
+
   'configuration' => array('configuration/configuration.acp.php', 'Configuration'),
   'configuration_save' => array('configuration/configuration_save.acp.php', 'Configuration - Saved'),
 

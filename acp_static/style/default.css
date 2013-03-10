@@ -221,3 +221,8 @@ table tbody tr td a.button {
 table tbody tr td a.button.red {
   color: #f00;
 }
+
+/*** Code */
+span.code {
+  font-family: monospace;
+}
