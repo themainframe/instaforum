@@ -32,8 +32,8 @@
     },
 
     "rows": [
-      {"config_id": 1, "config_key": "board_title", "config_value": "A Board"},
-      {"config_id": 2, "config_key": "board_description", "config_value": "A description of a board"}
+      {"config_id": null, "config_key": "board_title", "config_value": "A Board"},
+      {"config_id": null, "config_key": "board_description", "config_value": "A description of a board"}
     ]
   },
 
@@ -67,9 +67,9 @@
     },
 
     "rows": [ 
-      {"group_id": 1, "group_name": "Users"},
-      {"group_id": 2, "group_name": "Moderators"},
-      {"group_id": 3, "group_name": "Administrators"}
+      {"group_id": null, "group_name": "Users"},
+      {"group_id": null, "group_name": "Moderators"},
+      {"group_id": null, "group_name": "Administrators"}
     ]
   },
 
@@ -133,7 +133,7 @@
     },
 
     "rows": [
-      {"post_id": 1, "post_text": "This is a sample post.", "post_topic_id": 1, "post_forum_id": 1}
+      {"post_id": null, "post_text": "This is a sample post.", "post_topic_id": 1, "post_forum_id": 1}
     ]
   },
 
@@ -156,7 +156,7 @@
     },
 
     "rows": [
-      {"topic_id": 1, "topic_name": "A sample topic", "topic_forum_id": 1, "topic_owner_id": 1}
+      {"topic_id": null, "topic_name": "A sample topic", "topic_forum_id": 1, "topic_owner_id": 1}
     ]
   },
 
@@ -185,7 +185,10 @@
       }
     },
 
-    "rows": []
+    "rows": [
+      {"user_id": null, "user_name": "user", "user_password": "ee11cbb19052e40b07aac0ca060c23ee",
+       "user_full_name": "User McUserton", "user_email": "user@example.com", "user_group_id": 1}
+    ]
   }
 
 }
