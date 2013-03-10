@@ -5,17 +5,6 @@
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
 
-// Define database path
-define('DB_PATH', 'test_db');
-
-// Try to remove any old test remenants
-$path = getcwd();
-@system('rm -rf ' . $path . '/' . DB_PATH);
-
-// Create a database for tests to work in
-mkdir(DB_PATH);
-chmod(DB_PATH, 0777);
-
 /**
  * DB Test class
  * Evaluates the DB class.
@@ -109,7 +98,7 @@ class DBTest extends PHPUnit_Framework_TestCase
    */
   public function testOpenDB()
   {
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -126,7 +115,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testCreateTable()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -143,15 +132,15 @@ class DBTest extends PHPUnit_Framework_TestCase
     ));
     
     // Check low-level file creations happened
-    $this->assertFileExists(DB_PATH . '/alltypes-test.table');
+    $this->assertFileExists('../' . DB_PATH . '/alltypes-test.table');
     
     // Check datafile exists & is empty
-    $this->assertFileExists(DB_PATH . '/alltypes-test.table/data');
-    $this->assertEmpty(file_get_contents(DB_PATH . '/alltypes-test.table/data'));
+    $this->assertFileExists('../' . DB_PATH . '/alltypes-test.table/data');
+    $this->assertEmpty(file_get_contents('../' . DB_PATH . '/alltypes-test.table/data'));
     
     // Check schema file exists & is not empty
-    $this->assertFileExists(DB_PATH . '/alltypes-test.table/definition');
-    $this->assertNotEmpty(file_get_contents(DB_PATH . '/alltypes-test.table/definition'));
+    $this->assertFileExists('../' . DB_PATH . '/alltypes-test.table/definition');
+    $this->assertNotEmpty(file_get_contents('../' . DB_PATH . '/alltypes-test.table/definition'));
   }
   
   /**
@@ -164,7 +153,7 @@ class DBTest extends PHPUnit_Framework_TestCase
     $protoDefsFile = file_get_contents('.resources/alltypes-test-defs.txt');
     
     // Load definition file
-    $createdDefsFile = file_get_contents(DB_PATH . '/alltypes-test.table/definition');
+    $createdDefsFile = file_get_contents('../' . DB_PATH . '/alltypes-test.table/definition');
     
     // Compare
     $this->assertEquals($protoDefsFile, $createdDefsFile);
@@ -181,7 +170,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testInsertRow()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -190,7 +179,7 @@ class DBTest extends PHPUnit_Framework_TestCase
     $this->DB->insert('alltypes-test', $this->testRow);
     
     // Verify some data was written
-    $this->assertNotEmpty(file_get_contents(DB_PATH . '/alltypes-test.table/data'));
+    $this->assertNotEmpty(file_get_contents('../' . DB_PATH . '/alltypes-test.table/data'));
   }
   
   /**
@@ -200,12 +189,12 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testAutosWritten()
   {
     // Verify directory and col_a auto file exist
-    $this->assertFileExists(DB_PATH . '/alltypes-test.table/autos');
-    $this->assertFileExists(DB_PATH . '/alltypes-test.table/autos/col_a');
+    $this->assertFileExists('../' . DB_PATH . '/alltypes-test.table/autos');
+    $this->assertFileExists('../' . DB_PATH . '/alltypes-test.table/autos/col_a');
     
     // Should be "1" - no rows inserted yet.
     $this->assertEquals('1', 
-      file_get_contents(DB_PATH . '/alltypes-test.table/autos/col_a'));
+      file_get_contents('../' . DB_PATH . '/alltypes-test.table/autos/col_a'));
   }
 
   /**
@@ -215,7 +204,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testSelectRow()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -249,7 +238,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testUpdateRow()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -268,7 +257,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testSelectUpdatedRow()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -302,7 +291,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testDeleteRow()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -314,7 +303,7 @@ class DBTest extends PHPUnit_Framework_TestCase
     $this->assertEquals(1, $result->affected);
     
     // Is the data file now empty?
-    $this->assertEmpty(file_get_contents(DB_PATH . '/alltypes-test.table/data'));
+    $this->assertEmpty(file_get_contents('../' . DB_PATH . '/alltypes-test.table/data'));
   }
   
   // --------------------------------------------------
@@ -328,7 +317,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testInsertMultiRows()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -351,7 +340,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testSelectRows()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -385,7 +374,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testPredicateUpdate()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
@@ -408,7 +397,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testPredicateUpdateResult()
   {
     // Open data store
-    $this->DB = new DB(DB_PATH);
+    $this->DB = new DB('../' . DB_PATH);
     
     // Check DB
     $this->assertInstanceOf('DB', $this->DB);
