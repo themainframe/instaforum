@@ -8,9 +8,6 @@
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
 
-// Remove the contents of test_db
-system('rm -rf ../test_db/*');
-
 // Load application constants
 require_once '../init.php';
 
