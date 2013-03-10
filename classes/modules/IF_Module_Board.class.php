@@ -50,6 +50,13 @@ class IF_Module_Board extends IF_Module
       $posts = $this->parent->DB->select('if_posts',
         Predicate::_equal(new Value('post_forum_id'), $row['forum_id']));
 
+      // Check the permissions allow the current user to see this forum
+      if(!$this->parent->modules['User']->can('read', $row['forum_id']))
+      {
+        // No permission!
+        continue;
+      }
+
       $rows[] = array(
         'forum_id' => $row['forum_id'],
         'forum_title' => $row['forum_title'],
@@ -88,7 +95,8 @@ class IF_Module_Board extends IF_Module
 
     return array(
       'topics' => $rows,
-      'forum_id' => $ID
+      'forum_id' => $ID,
+      'can_create_new' => $this->parent->modules['User']->can('new_topic', $ID)
     );
   }
 
@@ -122,7 +130,9 @@ class IF_Module_Board extends IF_Module
       'posts' => $rows,
       'topic_id' => $ID,
       'topic_name' => $topic->rows[0]['topic_name'],
-      'forum_id' => $topic->rows[0]['topic_forum_id']
+      'forum_id' => $topic->rows[0]['topic_forum_id'],
+      'can_post' => 
+        $this->parent->modules['User']->can('post', $topic->rows[0]['topic_forum_id'])
     );
   }
 

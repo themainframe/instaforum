@@ -175,12 +175,20 @@ var IF = {
                              .attr('href', '#')
                              .click(IF.modules.board.build);
 
+
         // Append the new topic link (if permissions allow)
-        newLink = $('<a />').html('New Topic...')
-                            .attr('href', '#')
-                            .attr('id', topics.forum_id)
-                            .css('margin-right', '20px')
-                            .click(IF.modules.board.new_topic);
+        if(topics.can_create_new)
+        {
+          newLink = $('<a />').html('New Topic...')
+                              .attr('href', '#')
+                              .attr('id', topics.forum_id)
+                              .css('margin-right', '20px')
+                              .click(IF.modules.board.new_topic);
+        }
+        else
+        {
+          newLink = $('<span />');
+        }
 
         $(forumArea).append($('<br />'))
                     .append(newLink)
@@ -220,6 +228,7 @@ var IF = {
               function(ret) 
               {
                 // Re-get the list of posts
+                IF.modules.board.display_topic(ret[0]);
               }, 1
             );
 
@@ -236,7 +245,7 @@ var IF = {
       
         // Retrieve the forum contents
         IF.remote.exec('Board', 'getPosts',
-          {'id' : $(this).attr('id')},
+          {'id' : !topicID.type ? topicID : $(this).attr('id')},
           'IF.modules.board.got_posts', 1);
       },
 
@@ -280,10 +289,12 @@ var IF = {
                      .appendTo(topicArea);
         });
 
-
-        $('<textarea />').addClass('IF-input-post')
-                         .appendTo(topicArea)
-                         .keypress(function(e) {
+        // If we can post, show the box
+        if(posts.can_post)
+        {
+          $('<textarea />').addClass('IF-input-post')
+                           .appendTo(topicArea)
+                           .keypress(function(e) {
 
           if(e.which == 13)
           {
@@ -311,6 +322,8 @@ var IF = {
           }
 
         });
+
+      }
 
         $(topicArea).appendTo('.IF-body');
 
