@@ -161,13 +161,28 @@ class IF_Module_Board extends IF_Module
     }
 
     // Insert a topic
-    $this->parent->DB->insert('if_topics', array(
+    $newTopic = $this->parent->DB->insert('if_topics', array(
       'topic_id' => NULL,
       'topic_name' => $name,
       'topic_forum_id' => $ID,
       'topic_owner_id' => $_SESSION['user_id']
     ));
 
-    return 'Test';
+    // Insert the post into the new topic
+    if(!$newTopic->autos['topic_id'])
+    {
+      return false;
+    }
+
+    // Add post
+    $newPost = $this->parent->DB->insert('if_posts', array(
+      'post_id' => NULL,
+      'post_text' => $text,
+      'post_forum_id' => $ID,
+      'post_topic_id' => $newTopic->autos['topic_id'],
+      'post_owner_id' => $_SESSION['user_id']
+    ));
+
+    return $newTopic->autos['topic_id'];
   }
 }

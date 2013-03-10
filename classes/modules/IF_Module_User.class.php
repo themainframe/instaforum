@@ -84,7 +84,7 @@ class IF_Module_user extends IF_Module
     );
 
     // Find the relevant permissions mask field
-    $fields = (array)$row->next();
+    $fields = (array)$results->next();
 
     return $fields['permission_' . $permissionString];
   }
