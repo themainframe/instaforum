@@ -25,7 +25,7 @@ if(!defined('IF_IN_ACP'))
   <!-- BEGIN: Sidebar -->
   <div class="sidebar">
     <div class="logo">
-      <span class="logo"><?php print IF_APP_NAME; ?></span>
+      <a href="./" class="logo"><?php print IF_APP_NAME; ?></a>
     </div>
     <div class="section">
       <span class="title">Board</span>

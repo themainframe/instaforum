@@ -50,6 +50,15 @@ div.sidebar div.logo {
   font-size: 30px;
 }
 
+a.logo {
+  color: #fff;
+  text-decoration: none;
+}
+
+a.logo:hover {
+  border-bottom: 2px solid #fff;
+}
+
 div.sidebar div.section span.title {
   display: block;
   height: 40px;
