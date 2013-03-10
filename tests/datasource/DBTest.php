@@ -5,12 +5,6 @@
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
 
-// Load required classes
-include 'classes/datasource/Files.class.php';
-include 'classes/datasource/DB.class.php';
-include 'classes/datasource/Predicate.class.php';
-include 'classes/datasource/Result.class.php';
-
 // Define database path
 define('DB_PATH', 'test_db');
 
@@ -21,10 +15,6 @@ $path = getcwd();
 // Create a database for tests to work in
 mkdir(DB_PATH);
 chmod(DB_PATH, 0777);
-
-// Verify
-print DB_PATH . ' is' . (file_exists(DB_PATH) ? '' : ' NOT') . ' present.' . "\n";
-print DB_PATH . ' is' . (is_writable(DB_PATH) ? '' : ' NOT') . ' writable.' . "\n";
 
 /**
  * DB Test class
@@ -171,7 +161,7 @@ class DBTest extends PHPUnit_Framework_TestCase
   public function testTableDefinition()
   {
     // Load prototype file
-    $protoDefsFile = file_get_contents('tests/.resources/alltypes-test-defs.txt');
+    $protoDefsFile = file_get_contents('.resources/alltypes-test-defs.txt');
     
     // Load definition file
     $createdDefsFile = file_get_contents(DB_PATH . '/alltypes-test.table/definition');
