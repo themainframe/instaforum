@@ -145,6 +145,24 @@ class IF_Module_Board extends IF_Module
    */
   public function addPost($ID, $text)
   {
+    // Get the topic
+    $topic = $this->parent->DB->select('if_topics',
+      Predicate::_equal(new Value('topic_id'), $ID));
+
+    // Exists?
+    if($topic->count == 0)
+    {
+      return false;
+    }
+
+    $topic = $topic->next();
+
+    if(!$this->parent->modules['User']->can('post', $topic->topic_forum_id))
+    {
+      // No permission!
+      return false;
+    }
+
     // Insert a post
     $this->parent->DB->insert('if_posts', array(
       'post_topic_id' => $ID,
