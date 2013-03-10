@@ -21,7 +21,7 @@ if(isset($_GET['mode']) && $_GET['mode'] == 'do')
   $result = $IF->DB->select('if_admins', 
     Predicate::_and(
       Predicate::_equal(new Value('admin_name'), $_POST['username']),
-      Predicate::_equal(new Value('admin_password'), md5($_POST['password']))
+      Predicate::_equal(new Value('admin_password'), md5($_POST['password'] . IF_PW_SALT))
     )
   );
 
