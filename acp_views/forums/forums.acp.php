@@ -72,7 +72,8 @@ if(!defined('IF_IN_ACP'))
 
         $data->addRow(array(
           $row['forum_title'],
-          $topics->count,
+          '<a href="./?act=forum_show_topics&id=' . $row['forum_id']  . 
+            '">' . $topics->count . '</a>',
           0,
           '<a class="button" href="./?act=forum_edit&id=' . 
             $row['forum_id'] . '">Edit</a>' . 

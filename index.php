@@ -75,6 +75,9 @@ $modules = array(
   'forum_new' => array('forums/forum_new.acp.php', 'Forums - Create'),
   'forum_edit' => array('forums/forum_edit.acp.php', 'Forums - Edit'),
   'forum_edit_save' => array('forums/forum_edit_save.acp.php', 'Forums - Edit'),
+  'forum_show_topics' => array('forums/forum_show_topics.acp.php', 'Forums - Show Topics'),
+  'forum_topic_delete' => array('forums/forum_topic_delete.acp.php', 'Forums - Delete Topic'),
+  'forum_show_posts' => array('forums/forum_show_posts.acp.php', 'Forums - Show Posts'),
 
   'users' => array('users/users.acp.php', 'Users'),
   'user_edit' => array('users/user_edit.acp.php', 'Users - Edit'),
