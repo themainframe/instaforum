@@ -1,6 +1,4 @@
 {
-
-
   "if_admins": {
     "columns": {
       "admin_id": {
@@ -34,10 +32,154 @@
     },
 
     "rows": [
-      [1, "board_title", "A Forum"],
-      [2, "board_description", "A description of a forum"]
+      {"config_id": 1, "config_key": "board_title", "config_value": "A Forum"},
+      {"config_id": 2, "config_key": "board_description", "config_value": "A description of a forum"}
     ]
   },
 
+
+  "if_forums": {
+    "columns": {
+      "forum_id": {
+        "type": "int",
+        "auto": true
+      },
+      "forum_title": {
+        "type": "str64"
+      }
+    },
+
+    "rows": [ ]
+  },
+
+
+  "if_groups": {
+    "columns": {
+      "group_id": {
+        "type": "int",
+        "auto": true
+      },
+      "group_name": {
+        "type": "str64"
+      }
+    },
+
+    "rows": [ 
+      {"group_id": 1, "group_name": "Users"},
+      {"group_id": 2, "group_name": "Moderators"},
+      {"group_id": 3, "group_name": "Administrators"}
+    ]
+  },
+
+  "if_permissions": {
+    "columns": {
+      "permission_id": {
+        "type": "int",
+        "auto": true
+      },
+      "permission_group_id": {
+        "type": "int"
+      },
+      "permission_forum_id": {
+        "type": "int"
+      },
+      "permission_read": {
+        "type": "bool"
+      },
+      "permission_post": {
+        "type": "bool"
+      },
+      "permission_new_topic": {
+        "type": "bool"
+      },
+      "permission_sticky_topic": {
+        "type": "bool"
+      },
+      "permission_delete_own_p": {
+        "type": "bool"
+      },
+      "permission_delete_own_t": {
+        "type": "bool"
+      },
+      "permission_delete_p": {
+        "type": "bool"
+      },
+      "permission_delete_t": {
+        "type": "bool"
+      }
+    },
+
+    "rows": [ ]
+  },
+
+
+  "if_posts": {
+    "columns": {
+      "post_id": {
+        "type": "int",
+        "auto": true
+      },
+      "post_text": {
+        "type": "blob"
+      },
+      "post_text": {
+        "type": "blob"
+      },
+      "post_topic_id": {
+        "type": "int"
+      }
+    },
+
+    "rows": [ ]
+  },
+
+
+  "if_topics": {
+    "columns": {
+      "topic_id": {
+        "type": "int",
+        "auto": true
+      },
+      "topic_name": {
+        "type": "str64"
+      },
+      "topic_forum_id": {
+        "type": "int"
+      },
+      "topic_owner_id": {
+        "type": "int"
+      }
+    },
+
+    "rows": [ ]
+  },
+
+
+
+  "if_users": {
+    "columns": {
+      "user_id": {
+        "type": "int",
+        "auto": true
+      },
+      "user_name": {
+        "type": "str32"
+      },
+      "user_password": {
+        "type": "str32"
+      },
+      "user_full_name": {
+        "type": "str64"
+      },
+      "user_email": {
+        "type": "str64"
+      },
+      "user_group_id": {
+        "type": "int"
+      }
+    },
+
+    "rows": [ ]
+  }
 
 }

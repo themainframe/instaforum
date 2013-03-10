@@ -20,6 +20,16 @@ define('IF_IN_ACP', true);
 session_start();
 
 // ------------------------------------------------------
+// Check we are installed
+// ------------------------------------------------------
+if(!file_exists('./db/if_forums.table'))
+{
+  // Redirect to installer
+  header('Location: ./install');
+  exit();
+}
+
+// ------------------------------------------------------
 // Initialise
 // ------------------------------------------------------
 

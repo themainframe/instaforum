@@ -17,13 +17,11 @@ define('IF_INSTALLER', true);
 require_once '../init.php';
 require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
 
-$IF = new IF_Kernel();
-$IF->init();
 
 // ------------------------------------------------------
 // Detect existing installations
 // ------------------------------------------------------
-if(file_exists('../db/if_forums.table'))
+if(!file_exists('../db/if_forums.table'))
 {
   define('IF_DB_PRESENT', true);
 }
@@ -78,6 +76,7 @@ if(file_exists('../db/if_forums.table'))
       div.result p.details {
         margin-top: 4px;
         color: #afafaf;
+        max-width: 530px;
       }
 
       div.ok {

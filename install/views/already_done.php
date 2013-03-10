@@ -15,7 +15,7 @@ if(!IF_INSTALLER)
 }
 ?>
 
-<h1>Installer &raquo; Already done</h1>
+<h1><?php print IF_APP_NAME; ?> &raquo; Already done</h1>
 <p>
   It's now safe to remove the installer directory.
 </p>
