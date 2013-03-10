@@ -22,11 +22,8 @@ if(!$IF->init())
   print '<strong>Problems encountered during kernel init.</strong>';
 }
 
-// Load the schema
-$schema = @file_get_contents('schema.json');
-$db = json_decode($schema, true);
-
-if(!$schema || !$db)
+// Do the install
+if(($password = do_install('./schema.json')) == false)
 {
   ?>
 <h1><?php print IF_APP_NAME; ?> &raquo; Installation</h1>
@@ -36,27 +33,6 @@ if(!$schema || !$db)
   <?php
   exit();
 }
-
-// Read the data
-foreach($db as $tableName => $table)
-{
-  $IF->DB->createTable($tableName, $table['columns']);
-
-  // Create rows
-  foreach($table['rows'] as $row)
-  {
-    $IF->DB->insert($tableName, $row);
-  }
-}
-
-
-// Create admin account
-$password = substr(md5(rand(0,9999999999)), -6);
-$IF->DB->insert('if_admins', array(
-  'admin_id' => null,
-  'admin_name' => 'admin',
-  'admin_password' => md5($password . IF_PW_SALT)
-));
 
 ?>
 

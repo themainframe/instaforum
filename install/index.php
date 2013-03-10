@@ -16,7 +16,7 @@ define('IF_INSTALLER', true);
 // ------------------------------------------------------
 require_once '../init.php';
 require_once IF_ROOT_PATH . '/classes/IF_Kernel.class.php';
-
+require_once 'installer_tools.php';
 
 // ------------------------------------------------------
 // Detect existing installations
