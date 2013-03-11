@@ -73,6 +73,31 @@ $user = $user->next();
 
     <div class="field">
       <div class="info">
+        <span class="title">Group membership</span>
+        <p class="description">
+          The group this user is assigned to.
+        </p>
+      </div>
+      <div class="value">
+        <select name="group">
+<?php
+
+  $groups = $IF->DB->select('if_groups');
+  while($group = $groups->next())
+  {
+    ?><option value="<?php print $group->group_id;?>"
+      <?php print $user->user_group_id == $group->group_id ? 'selected="selected"' : ''; ?>
+      ><?php print $group->group_name; ?></option>
+    <?php
+  }
+
+?>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="info">
       </div>
       <div class="value">
         <input type="submit" value="Save Changes" />

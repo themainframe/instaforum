@@ -17,7 +17,8 @@ if(!defined('IF_IN_ACP'))
 // Save all changes
 $forum = $IF->DB->update('if_users', array(
     'user_full_name' => $_POST['full_name'],
-    'user_email' => $_POST['email']
+    'user_email' => $_POST['email'],
+    'user_group_id' => $_POST['group']
   ),
   Predicate::_equal(new Value('user_id'), $_GET['id']));
 
