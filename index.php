@@ -89,6 +89,8 @@ $modules = array(
   'group_edit_save' => array('groups/group_edit_save.acp.php', 'Groups - Edit'),
 
   'hooks' => array('hooks/hooks.acp.php', 'Hooks'),
+  'style' => array('style/style.acp.php', 'Style Editor'),
+  'style_save' => array('style/style_save.acp.php', 'Style Editor'),
 
   'configuration' => array('configuration/configuration.acp.php', 'Configuration'),
   'configuration_save' => array('configuration/configuration_save.acp.php', 'Configuration - Saved'),
@@ -104,6 +106,7 @@ if($headerFooterEnabled)
 {
   require IF_ROOT_PATH . '/acp_static/header.acp.php';
 }
+
 
 // Validate the file
 if(!array_key_exists($action, $modules) ||

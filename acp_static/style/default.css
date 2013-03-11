@@ -223,6 +223,6 @@ table tbody tr td a.button.red {
 }
 
 /*** Code */
-span.code {
+.code {
   font-family: monospace;
 }

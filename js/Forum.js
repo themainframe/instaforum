@@ -52,6 +52,15 @@ var IF = {
     this.modules.board.init();
     this.modules.user.init();
 
+    // Load the CSS in
+    var head  = $('<head />');
+    var link  = $('<link />').attr('id', 'IF-CSS')
+                             .attr('rel', 'stylesheet')
+                             .attr('type', 'text/css')
+                             .attr('href', IF.remote.responder_path + '/style.php')
+                             .attr('media', 'all')
+                             .appendTo('head');
+
     // Start remote timer
     this.remote.start();
   },
@@ -264,7 +273,6 @@ var IF = {
             {'attribute' : name, 'value' : IF.cache.get('board.' + name)});
         }
       },
-
 
       /**
        * The posts have been retrieved.
@@ -635,7 +643,7 @@ var IF = {
     /**
      * The path to the responder program.
      */
-    'responder_path' : './instaforum/ajax/responder.php',
+    'responder_path' : './instaforum/ajax/',
 
     /**
      * The request ID.
@@ -676,7 +684,8 @@ var IF = {
       if(IF.remote.queue.length > 0)
       {
         // Dispatch requests
-        $.ajax(IF.remote.responder_path + '?rand=' + Math.floor(Math.random(0,99999) * 1000), {
+        $.ajax(IF.remote.responder_path + 'responder.php?rand=' + 
+           Math.floor(Math.random(0,99999) * 1000), {
           'data': 'IF=' + JSON.stringify(IF.remote.queue),
           'dataType': 'json',
           'type': 'post',
