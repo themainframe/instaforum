@@ -17,8 +17,8 @@ if(!defined('IF_IN_ACP'))
 <head>
   <title><?php print IF_APP_NAME; ?> - <?php print isset($ACP_TITLE) ? $ACP_TITLE : 'Admin'; ?></title>
   <link rel="stylesheet" type="text/css" href="acp_static/style/default.css" />
-  <link rel="stylesheet" type="text/css" href="js/external/jquery.min.js" />
-  <link rel="stylesheet" type="text/css" href="acp_static/js/acp.js" />
+  <script type="text/javascript" src="js/external/jquery.min.js"></script>
+  <script type="text/javascript" src="acp_static/js/acp.js"></script>
 </head>
 <body>
 
