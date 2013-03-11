@@ -493,10 +493,18 @@ class DB
       }
       else
       {
-        $segData = self::getChrs(
-          str_split(substr($values[$columnName], 0,
-          $this->types[$column['type']])),
-          $this->types[$column['type']]);
+        if(array_key_exists($columnName, $values))
+        {
+          $segData = self::getChrs(
+            str_split(substr($values[$columnName], 0,
+            $this->types[$column['type']])),
+            $this->types[$column['type']]);
+        }
+        else
+        {
+          $segData = self::getChrs(array(''),
+            $this->types[$column['type']]);
+        }
       }
       
       fwrite($tableDataHandle, $segData);
