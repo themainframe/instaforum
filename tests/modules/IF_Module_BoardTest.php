@@ -18,19 +18,21 @@ class IF_Module_BoardTest extends PHPUnit_Framework_TestCase
   {
     global $IF;
 
+    // Make it so I have permission to see a board
+    $IF->modules['User']->login('user', 'user');
+
+    // Give permission
+    $IF->DB->insert('if_permissions', array(
+      'permission_read' => 1,
+      'permission_forum_id' => 1,
+      'permission_group_id' => 1
+    )); 
+
     // Get the forums
     $forums = $IF->modules['Board']->getForums();
 
-    // Check the first one is valid
-    $forumRow = array(
-      'forum_id' => 1,
-      'forum_title' => 'Your first forum',
-      'forum_topics' => 1,
-      'forum_posts' => 1
-    );
-
     // Check it is correct
-    $this->assertEquals($forumRow, $forums[0]);
+    $this->assertEquals('Your first forum', $forums[0]['forum_title']);
   }
 
   /**
@@ -44,23 +46,15 @@ class IF_Module_BoardTest extends PHPUnit_Framework_TestCase
     // Get the topics
     $topics = $IF->modules['Board']->getTopics(1);
 
-    // Check the first one is valid
-    $topicRow = array(
-      'topic_id' => 1,
-      'topic_title' => 'A sample topic',
-      'topic_posts' => 1,
-      'forum_id' => 1
-    );
-
     // Check it is correct
-    $this->assertEquals($topicRow, $topics['topics'][0]);
+    $this->assertEquals('A sample topic', $topics['topics'][0]['topic_title']);
   }
 
   /**
    * Get the posts
    * @depends testGetForums
    */
-  public function testGetposts()
+  public function testGetPosts()
   {
     global $IF;
 
