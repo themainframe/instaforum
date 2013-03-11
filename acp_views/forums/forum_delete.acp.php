@@ -18,9 +18,13 @@ if(!defined('IF_IN_ACP'))
 $IF->DB->delete('if_forums',
   Predicate::_equal(new Value('forum_id'), $_GET['id']));
 
-/**
- * @todo Remove the topics & posts from the forums
- */
+// Delete topics
+$IF->DB->delete('if_topics',
+  Predicate::_equal(new Value('topic_forum_id'), $_GET['id']));
+
+// Delete posts
+$IF->DB->delete('if_posts',
+  Predicate::_equal(new Value('post_forum_id'), $_GET['id']));
 
 ?>
 
