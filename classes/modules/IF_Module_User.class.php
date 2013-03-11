@@ -62,6 +62,13 @@ class IF_Module_user extends IF_Module
    */
   public function can($permissionString, $forumID)
   {
+    // Am I logged in?
+    if(!isset($_SESSION) || !isset($_SESSION['user_id']))
+    {
+      // Nothing allowed
+      return false;
+    }
+
     // Get the group I am in.
     $userQuery = $this->parent->DB->select('if_users',
       Predicate::_equal(new Value('user_id'), $_SESSION['user_id']));
