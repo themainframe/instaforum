@@ -29,7 +29,7 @@ if(!defined('IF_IN_ACP'))
     </div>
     <div class="section">
       <span class="title">Board</span>
-      <a href="?act=forums">Forums &amp; Subforums</a>
+      <a href="?act=forums">Forums</a>
       <a href="?act=configuration">Configuration</a>
     </div>
     <div class="section">
