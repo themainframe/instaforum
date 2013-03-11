@@ -399,7 +399,7 @@ var IF = {
         }
 
         // Logged in?
-        if(this.user_id == -1)
+        if(this.user_id == undefined || this.user_id == -1)
         {
           // Render a login form
           username = $('<input />').addClass('IF-input IF-hint')
