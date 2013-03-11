@@ -8,6 +8,9 @@
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
 
+// All errors stop the build
+error_reporting(E_ALL);
+
 // Load application constants
 require_once '../init.php';
 

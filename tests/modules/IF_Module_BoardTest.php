@@ -23,6 +23,7 @@ class IF_Module_BoardTest extends PHPUnit_Framework_TestCase
 
     // Give permission
     $IF->DB->insert('if_permissions', array(
+      'permission_id' => null,
       'permission_read' => 1,
       'permission_forum_id' => 1,
       'permission_group_id' => 1
