@@ -33,7 +33,9 @@
 
     "rows": [
       {"config_id": null, "config_key": "board_title", "config_value": "A Board"},
-      {"config_id": null, "config_key": "board_description", "config_value": "A description of a board"}
+      {"config_id": null, "config_key": "board_description", "config_value": "A description of a board"},
+      {"config_id": null, "config_key": "users_public_group", "config_value": 1},
+      {"config_id": null, "config_key": "users_default_group", "config_value": 2}
     ]
   },
 
@@ -67,6 +69,7 @@
     },
 
     "rows": [ 
+      {"group_id": null, "group_name": "Public"},
       {"group_id": null, "group_name": "Users"},
       {"group_id": null, "group_name": "Moderators"},
       {"group_id": null, "group_name": "Administrators"}
@@ -195,7 +198,7 @@
 
     "rows": [
       {"user_id": null, "user_name": "user", "user_password": "ee11cbb19052e40b07aac0ca060c23ee",
-       "user_full_name": "User McUserton", "user_email": "user@example.com", "user_group_id": 1}
+       "user_full_name": "User McUserton", "user_email": "user@example.com", "user_group_id": 2}
     ]
   }
 
