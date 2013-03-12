@@ -26,6 +26,10 @@ if(!defined('IF_IN_ACP'))
       Users can join and log in to the forum using the interface on your site
       rendered by the <strong>IF-user</strong> hook.
 
+      <br /><br />
+
+      You can also manually <a href="?act=user_add" title="Create a user">create a user</a>.
+
     </p>
 
     <?php
