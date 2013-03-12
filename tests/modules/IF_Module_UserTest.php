@@ -14,7 +14,8 @@ class IF_Module_UserTest extends PHPUnit_Framework_TestCase
   /**
    * Null test
    */
-  public function testPlaceholder() {
+  public function testPlaceholder()
+  {
     return true;
   }
 }

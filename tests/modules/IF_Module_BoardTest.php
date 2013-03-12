@@ -71,5 +71,4 @@ class IF_Module_BoardTest extends PHPUnit_Framework_TestCase
     // Check it is correct
     $this->assertEquals($postRow, $posts['posts'][0]);
   }
-
 }
