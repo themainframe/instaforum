@@ -23,8 +23,8 @@ if(!defined('IF_IN_ACP'))
 
       <br /><br />
 
-      Users can join the forum using the interface on your site
-      rendered by the <strong>IF-sidebar</strong> hook.
+      Users can join and log in to the forum using the interface on your site
+      rendered by the <strong>IF-user</strong> hook.
 
     </p>
 
