@@ -15,7 +15,7 @@ if(!defined('IF_IN_ACP'))
 }
 
 
-// Save all changes
+// Get the topics
 $forum = $IF->DB->select('if_forums',
   Predicate::_equal(new Value('forum_id'), $_GET['id']));
 
@@ -70,7 +70,10 @@ $forum = $forum->next();
       ));
 
       // Get the rows
-      $result = $IF->DB->select('if_topics');
+      $result = $IF->DB->select('if_topics', 
+        Predicate::_equal(new Value('topic_forum_id'), $_GET['id']));
+
+
       foreach($result->rows as $row)
       {
         // Count posts
