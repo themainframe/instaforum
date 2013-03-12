@@ -245,8 +245,8 @@ class IF_Dataview
       $html .= '      <td style="' . 
         $this->getCSSString($column['css']) . '">' . PHP_EOL;
       $html .= '        <a href="' . 
-        ($column['checkbox'] ? '#' : $this->getSortURL($cID)) . '">' . PHP_EOL;
-      $html .= '          ' . ($column['checkbox'] ? '' : $this->getSortArrow($cID)) . 
+        ($column['checkbox'] ? '#' : $this->getSortURL($cID + 1)) . '">' . PHP_EOL;
+      $html .= '          ' . ($column['checkbox'] ? '' : $this->getSortArrow($cID + 1)) . 
         $column['name'] . PHP_EOL;
       $html .= '        </a>' . PHP_EOL;
       $html .= '      </td>' . PHP_EOL;
