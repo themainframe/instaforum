@@ -431,12 +431,22 @@ var IF = {
 
                       });
 
+          // Create the register link
+          regLink = $('<a />').html('...or click here to register!')
+                              .attr('href', '#')
+                              .css('float', 'right')
+                              .css('clear', 'both')
+                              .click(IF.modules.user.display_regform);
+
           // Append it all
           $(userArea).append('<span id="IF-user-desc">Please log in to post:</span>')
                      .append('<br /><br />')
                      .append(username)
                      .append(password)
                      .append($('<br />'))
+                     .append($('<br />'))
+                     .append(regLink)
+                     .append($('<br class="clear" />'))
                      .append($('<br />'));
         }
         else
@@ -453,6 +463,87 @@ var IF = {
                      .append('<br /><br />');
         }
 
+      },
+
+      'display_regform' : function() {
+
+        userArea = $('.IF-user:first').html('');
+
+        // Render the registration form
+        newUname = $('<input />').addClass('IF-input IF-hint')
+                    .val('Desired Username')
+                    .attr('id', 'IF-desired-username-field')
+                    .attr('hint', 'Desired Username');
+
+        newPass = $('<input />').addClass('IF-input')
+                    .val('')
+                    .attr('type', 'password')
+                    .attr('id', 'IF-desired-password-field');
+
+        email = $('<input />').addClass('IF-input IF-hint')
+                    .val('Valid Email')
+                    .attr('id', 'IF-email-field')
+                    .attr('hint', 'Valid Email');
+
+        fullname = $('<input />').addClass('IF-input IF-hint')
+                    .val('Full Name')
+                    .attr('id', 'IF-fullname-field')
+                    .attr('hint', 'Full Name')
+                    .keypress(function(e) {
+
+                      if(e.which == 13)
+                      {
+                        // Perform the registration
+                        IF.modules.user.do_register(
+                          $('#IF-desired-username-field').val(),
+                          $('#IF-desired-password-field').val(),
+                          $('#IF-email-field').val(),
+                          $('#IF-fullname-field').val()
+                        );
+                      }
+
+                    });
+
+        $(userArea).append('<span id="IF-user-desc">Create your account:</span>')
+                   .append('<br /><br />')
+                   .append(newUname)
+                   .append(newPass)
+                   .append(email)
+                   .append(fullname)
+                   .append($('<br />'))
+                   .append($('<br />'))
+                   .append($('<br class="clear" />'));
+      },
+
+      'do_register' : function(newUname, newPass, email, fullname) {
+
+        // Perform the registration
+        IF.remote.exec('User', 'register', {
+          'newUser' : newUname,
+          'newPass' : newPass,
+          'email' : email,
+          'fullName' : fullname
+        }, 'IF.modules.user.register_callback', 1);
+
+        return true;
+
+      },
+
+      'register_callback' : function(result) {
+
+        // The registration is done
+        if(result.status)
+        {
+          // Everything OK, show the login window
+          IF.modules.user.build();
+        }
+        else
+        {
+          // Show the error message
+          $('#IF-user-desc').html(result.message);
+        }
+
+        return true;
       },
 
       'do_login' : function(username, password) {

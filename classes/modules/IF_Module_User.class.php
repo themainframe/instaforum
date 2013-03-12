@@ -53,6 +53,50 @@ class IF_Module_user extends IF_Module
   }
 
   /**
+   * Register a user on the system.
+   * 
+   * @param string $userName The name of the user to create.
+   * @param string $password The password to use.
+   * @param string $email The email address.
+   * @param string $fullName The full name to use.
+   * @return array
+   */
+  public function register($userName, $password, $email, $fullName)
+  {
+    // Check if the username is taken already?
+    $userCheck = $this->parent->DB->select('if_users',
+      Predicate::_equal(new Value('user_name'), $userName));
+
+    if($userCheck->count == 1)
+    {
+      return array(
+        'status' => false,
+        'message' => 'A user with that name already exists.'
+      );  
+    }
+
+    // Get the default group
+    $defaultGroup = 
+      intval($this->parent->modules['Config']->get('users_default_group'));
+
+    // Create the user account
+    $this->parent->DB->insert('if_users', array(
+      'user_id' => NULL,
+      'user_name' => $userName,
+      'user_password' => md5($password . IF_PW_SALT),
+      'user_full_name' => $fullName,
+      'user_email' => $email,
+      'user_group_id' => $defaultGroup
+    ));
+
+    // Everything OK
+    return array(
+      'status' => true,
+      'message' => ''
+    );
+  } 
+
+  /**
    * Check if the current user can perform the specified action in the
    * specified forum.
    * 
