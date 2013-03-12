@@ -84,7 +84,7 @@ $forum = $forum->next();
         // Creator exists?
         if($creator->count == 0)
         {
-          $creatorName = 'Deleted User';
+          $creatorName = 'Guest User';
         }
         else
         {          
