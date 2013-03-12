@@ -27,7 +27,15 @@ $styles = array(
   'IF-topic' => array(
     'name' => 'Post List (Topic)',
     'code' => $IF->modules['Config']->get('board_style_IF-topic')
-  )
+  ),
+  'IF-input-post' => array(
+    'name' => 'Post Input Box',
+    'code' => $IF->modules['Config']->get('board_style_IF-input-post')
+  ),
+  'IF-hint' => array(
+    'name' => 'Hint Text',
+    'code' => $IF->modules['Config']->get('board_style_IF-hint')
+  ),
 );
 
 ?>
