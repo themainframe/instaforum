@@ -113,6 +113,9 @@ var IF = {
         // Clear the body
         $('.IF-body').html('');
 
+        // Unset topic
+        IF.modules.board.topic_id = -1;
+
         boardArea = $('<div />').addClass('IF-board');
 
         $.each(forums, function(i, o) {
@@ -141,6 +144,7 @@ var IF = {
 
         // Set forum context
         IF.modules.board.forum_id = $(this).attr('id');
+        IF.modules.board.topic_id = -1;
 
         // Retrieve the forum contents
         IF.remote.exec('Board', 'getTopics', {'id' : $(this).attr('id')},
@@ -158,6 +162,7 @@ var IF = {
 
         // Set forum context
         IF.modules.board.forum_id = topics.forum_id;
+        IF.modules.board.topic_id = -1;
 
         // Show all topics
         forumArea = $('<div />').addClass('IF-forum')
@@ -256,6 +261,9 @@ var IF = {
         IF.remote.exec('Board', 'getPosts',
           {'id' : !topicID.type ? topicID : $(this).attr('id')},
           'IF.modules.board.got_posts', 1);
+
+        // Set the topic ID
+        IF.modules.board.topic_id = !topicID.type ? topicID : $(this).attr('id');
       },
 
       /** 
@@ -275,6 +283,56 @@ var IF = {
       },
 
       /**
+       * Automatically retrieve posts
+       */
+      'auto_posts' : function() {
+
+        if(IF.modules.board.topic_id != -1)
+        {
+          // Get the posts
+          IF.remote.exec('Board', 'getPosts',
+            {'id' : IF.modules.board.topic_id},
+            'IF.modules.board.got_auto_posts', 1);
+        }
+
+      },
+
+      /**
+       *  Display the autoloaded posts
+       */
+      'got_auto_posts' : function(posts) {
+
+        // Get the topic area
+        topicArea = $('.IF-topic#' + posts.topic_id);
+
+        // For each post sequentially, determine if it has been added.
+        $.each(posts.posts, function(i, o) {
+
+          if($('.IF-post[pid="' + o.post_id + '"]').length == 0)
+          {
+            console.log(o.post_id + ' does not exists');
+
+            // Not visible yet, add it
+            post = $('<div />').html(o.post_text)
+                             .attr('class', 'IF-post')
+                             .attr('pid', o.post_id);
+
+            $('<div />').html(post)
+                        .insertAfter($('.IF-post').last());
+          }      
+          else
+          {
+            console.log(o.post_id + ' already exists');
+          }
+          
+        });
+
+        // Reschedule
+        setTimeout(IF.modules.board.auto_posts, 1000);
+
+      },
+
+      /**
        * The posts have been retrieved.
        */
       'got_posts' : function(posts) {
@@ -291,11 +349,14 @@ var IF = {
           // Generate the link
           post = $('<div />').html(o.post_text)
                              .attr('class', 'IF-post')
-                             .attr('id', o.post_id);
+                             .attr('pid', o.post_id);
 
           $('<div />').html(post)
                      .appendTo(topicArea);
         });
+
+        // Start autoupdating
+        IF.modules.board.auto_posts();
 
         // If we can post, show the box
         if(posts.can_post)
