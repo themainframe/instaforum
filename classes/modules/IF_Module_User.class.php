@@ -13,7 +13,7 @@
  *
  * @package IF
  */
-class IF_Module_user extends IF_Module
+class IF_Module_User extends IF_Module
 {
   /**
    * Perform the login.
@@ -50,6 +50,18 @@ class IF_Module_user extends IF_Module
     $_SESSION['user_id'] = $user['user_id']; 
 
     return $user;
+  }
+
+  /**
+   * Destroy the session (logout).
+   * 
+   * @return boolean
+   */
+  public function logout()
+  {
+    $_SESSION['user_id'] = -1;
+
+    return true;
   }
 
   /**
@@ -107,10 +119,24 @@ class IF_Module_user extends IF_Module
   public function can($permissionString, $forumID)
   {
     // Am I logged in?
-    if(!isset($_SESSION) || !isset($_SESSION['user_id']))
+    if(!isset($_SESSION) || !isset($_SESSION['user_id'])  || 
+      $_SESSION['user_id'] == -1)
     {
-      // Nothing allowed
-      return false;
+      // Use the default group
+      $defaultGroup = 
+        intval($this->parent->modules['Config']->get('users_public_group'));
+
+      // Get permissions for this forum
+      $results = $this->parent->DB->select('if_permissions',
+        Predicate::_and(
+          Predicate::_equal(new Value('permission_group_id'), $defaultGroup),
+          Predicate::_equal(new Value('permission_forum_id'), $forumID)
+        )
+      );
+
+      // Get the relevant field
+      $fields = (array)$results->next();
+      return $fields['permission_' . $permissionString];
     }
 
     // Get the group I am in.
