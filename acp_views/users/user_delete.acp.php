@@ -24,7 +24,7 @@ $IF->DB->delete('if_users',
 
 ?>
 
-    <h1>Users &amp; Permissions &raquo; Forums</h1>
+    <h1>Users &amp; Permissions &raquo; Delete User</h1>
     <p>
       The user account has been deleted.
     </p>

@@ -16,7 +16,7 @@ if(!defined('IF_IN_ACP'))
 
 ?>
 
-  <h1>Users &amp; Permissions &raquo; Add</h1>
+  <h1>Users &amp; Permissions &raquo; Add User</h1>
   <h2>User Properties</h2>
 
   <form action="?act=user_add_save" method="post">
