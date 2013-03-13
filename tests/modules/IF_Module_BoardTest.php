@@ -65,7 +65,8 @@ class IF_Module_BoardTest extends PHPUnit_Framework_TestCase
     // Check the first one is valid
     $postRow = array(
       'post_id' => 1,
-      'post_text' => 'This is a sample post.'
+      'post_text' => 'This is a sample post.',
+      'post_owner' => 'User McUserton'
     );
 
     // Check it is correct
