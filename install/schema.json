@@ -114,7 +114,25 @@
       }
     },
 
-    "rows": [ ]
+    "rows": [
+
+      {
+        "permission_id": null,
+        "permission_group_id": 1,
+        "permission_forum_id": 1,
+        "permission_read": 1
+      },
+
+      {
+        "permission_id": null,
+        "permission_group_id": 2,
+        "permission_forum_id": 1,
+        "permission_read": 1,
+        "permission_post": 1,
+        "permission_new_topic": 1
+      }   
+
+    ]
   },
 
 
