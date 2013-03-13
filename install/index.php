@@ -3,7 +3,6 @@
  * index.php
  * Instaforum installer index.
  *
- * @test
  * @author Damien Walsh <walshd0@cs.man.ac.uk>
  */
 
