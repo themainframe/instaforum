@@ -44,7 +44,7 @@ if(!defined('IF_IN_ACP'))
     </div>
     <div class="section">
       <span class="title">System</span>
-      <a href="?act=db">Storage</a>
+      <a href="DB_Manager.php" target="_blank">Storage</a>
       <a href="?act=about">About</a>
       <a href="?act=logout">Log Out</a>
     </div>
