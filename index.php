@@ -83,6 +83,8 @@ $modules = array(
   'user_edit' => array('users/user_edit.acp.php', 'Users - Edit'),
   'user_edit_save' => array('users/user_edit_save.acp.php', 'Users - Edit'),
   'user_delete' => array('users/user_delete.acp.php', 'Users - Deleted'),
+  'user_add' => array('users/user_add.acp.php', 'Users - Add'),
+  'user_add_save' => array('users/user_add_save.acp.php', 'Users - Added'),
 
   'groups' => array('groups/groups.acp.php', 'Groups'),
   'group_edit' => array('groups/group_edit.acp.php', 'Groups - Edit'),
