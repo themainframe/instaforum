@@ -70,11 +70,14 @@ if(!defined('IF_IN_ACP'))
         $topics = $IF->DB->select('if_topics',
           Predicate::_equal(new Value('topic_forum_id'), $row['forum_id']));
 
+        $posts = $IF->DB->select('if_posts',
+          Predicate::_equal(new Value('post_forum_id'), $row['forum_id']));
+
         $data->addRow(array(
           $row['forum_title'],
           '<a href="./?act=forum_show_topics&id=' . $row['forum_id']  . 
             '">' . $topics->count . '</a>',
-          0,
+          $posts->count,
           '<a class="button" href="./?act=forum_edit&id=' . 
             $row['forum_id'] . '">Edit</a>' . 
             '<a class="button red" href="?act=forum_delete&id=' . 
