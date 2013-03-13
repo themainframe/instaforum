@@ -585,7 +585,10 @@ var IF = {
       'do_logout' : function() {
 
         // Perform the logout
-        IF.remote.exec('User', 'logout', {}, function() { }, 1);
+        IF.remote.exec('User', 'logout', {}, function() {
+          IF.modules.user.build();
+          IF.modules.board.build();
+        }, 1);
 
         // Clear details in cache
         IF.cache.set('user_id', -1);
@@ -596,9 +599,6 @@ var IF = {
         IF.modules.user.user_id = -1;
         IF.modules.user.user_name = '';
         IF.modules.user.user_full_name = '';
-
-        // Rebuild UI
-        IF.modules.user.build();
 
       }
 
