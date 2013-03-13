@@ -79,6 +79,16 @@ class IF_Module_Board extends IF_Module
       Predicate::_equal(new Value('topic_forum_id'), $ID));
     $rows = array();
 
+    // Can I see this forum?
+    if(!$this->parent->modules['User']->can('read', $ID))
+    {
+      return array(
+        'topics' => array(),
+        'forum_id' => $ID,
+        'can_create_new' => false
+      );
+    }
+
     foreach($topics->rows as $row)
     {
       // Count posts
