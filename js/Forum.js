@@ -177,8 +177,13 @@ var IF = {
                            .attr('id', o.topic_id)
                            .click(IF.modules.board.display_topic);
 
-          $('<div />').html(link)
-                     .appendTo(forumArea);
+          info = $('<em />').html(' - started by ' + o.topic_owner + 
+                             ' - ' + o.topic_posts + ' posts')
+                            .addClass('grey IF-hint');
+
+          $('<div />').append(link)
+                      .append(info)
+                      .appendTo(forumArea);
         });
 
         $(forumArea).append($('<br />'));
@@ -317,7 +322,11 @@ var IF = {
                              .attr('class', 'IF-post')
                              .attr('pid', o.post_id);
 
-            $('<div />').html(post)
+            tag = $('<em />').html(o.post_owner + '&nbsp; ')
+                             .addClass('IF-hint');
+
+            $('<div />').append(tag)
+                        .append(post)
                         .insertAfter($('.IF-post').last());
           }      
           else
@@ -351,8 +360,12 @@ var IF = {
                              .attr('class', 'IF-post')
                              .attr('pid', o.post_id);
 
-          $('<div />').html(post)
-                     .appendTo(topicArea);
+          tag = $('<em />').html(o.post_owner + '&nbsp; ')
+                           .addClass('IF-hint');
+
+          $('<div />').append(tag)
+                      .append(post)
+                      .appendTo(topicArea);
         });
 
         // Start autoupdating

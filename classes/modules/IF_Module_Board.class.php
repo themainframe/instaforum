@@ -95,10 +95,26 @@ class IF_Module_Board extends IF_Module
       $posts = $this->parent->DB->select('if_posts',
         Predicate::_equal(new Value('post_topic_id'), $row['topic_id']));
 
+      // Get the owner of the topic
+      $owner = $this->parent->DB->select('if_users',
+        Predicate::_equal(new Value('user_id'), $row['topic_owner_id']));
+
+      // Still exists? Reassign to the name
+      if($owner->count == 1)
+      {
+        $ownerUser = $owner->next();
+        $owner = $ownerUser->user_full_name;
+      }
+      else
+      {
+        $owner = 'Guest User';
+      }
+
       $rows[] = array(
         'topic_id' => $row['topic_id'],
         'topic_title' => $row['topic_name'],
         'topic_posts' => $posts->count,
+        'topic_owner' => $owner,
         'forum_id' => $ID
       );
     }
@@ -125,10 +141,26 @@ class IF_Module_Board extends IF_Module
 
     foreach($posts->rows as $row)
     {
+      // Get the owner of the post
+      $owner = $this->parent->DB->select('if_users',
+        Predicate::_equal(new Value('user_id'), $row['post_owner_id']));
+
+      // Still exists? Reassign to the name
+      if($owner->count == 1)
+      {
+        $ownerUser = $owner->next();
+        $owner = $ownerUser->user_full_name;
+      }
+      else
+      {
+        $owner = 'Guest User';
+      }
+
       // Count topics and posts
       $rows[] = array(
         'post_id' => $row['post_id'],
-        'post_text' => $row['post_text']
+        'post_text' => $row['post_text'],
+        'post_owner' => $owner
       );
     }
 
