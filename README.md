@@ -10,3 +10,4 @@ Instaforum is a dissertation project by [Damien Walsh](http://www.damow.net), a 
 #### Links
 
 * [Travis CI Build Logs](https://travis-ci.org/themainframe/instaforum "Travis CI Build Logs")
+* [Project Report](http://link.damow.net/2B0z1t273Y2c/Instaforum-Report.pdf "Project Report")
